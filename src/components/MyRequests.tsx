@@ -148,7 +148,7 @@ const MyRequests: React.FC<MyRequestsProps> = ({ currentUser }) => {
     return Array.from({ length: 5 }, (_, i) => (
       <Star
         key={i}
-        className={`h-4 w-4 ${
+        className={`h-3 w-3 ${
           i < Math.floor(rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'
         }`}
       />
@@ -160,8 +160,8 @@ const MyRequests: React.FC<MyRequestsProps> = ({ currentUser }) => {
 
     if (state === 'accepted') {
       return (
-        <div className="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-lg font-medium">
-          <CheckCircle className="h-4 w-4" />
+        <div className="flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 rounded-lg text-sm font-medium">
+          <CheckCircle className="h-3 w-3" />
           Connected
         </div>
       );
@@ -169,8 +169,8 @@ const MyRequests: React.FC<MyRequestsProps> = ({ currentUser }) => {
 
     if (state === 'declined') {
       return (
-        <div className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium">
-          <X className="h-4 w-4" />
+        <div className="flex items-center gap-1 px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium">
+          <X className="h-3 w-3" />
           {request.requestType === 'received' ? 'Declined' : 'Cancelled'}
         </div>
       );
@@ -181,16 +181,16 @@ const MyRequests: React.FC<MyRequestsProps> = ({ currentUser }) => {
         <div className="flex gap-2">
           <button
             onClick={() => handleAcceptRequest(request.id)}
-            className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg font-medium hover:bg-green-600 transition-colors duration-200 flex-1"
+            className="flex items-center gap-1 px-3 py-1 bg-green-500 text-white rounded-lg text-sm font-medium hover:bg-green-600 transition-colors duration-200"
           >
-            <UserCheck className="h-4 w-4" />
+            <UserCheck className="h-3 w-3" />
             Accept
           </button>
           <button
             onClick={() => handleDeclineRequest(request.id)}
-            className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600 transition-colors duration-200"
+            className="flex items-center gap-1 px-2 py-1 bg-red-500 text-white rounded-lg text-sm font-medium hover:bg-red-600 transition-colors duration-200"
           >
-            <X className="h-4 w-4" />
+            <X className="h-3 w-3" />
           </button>
         </div>
       );
@@ -200,9 +200,9 @@ const MyRequests: React.FC<MyRequestsProps> = ({ currentUser }) => {
     return (
       <button
         onClick={() => handleCancelRequest(request.id)}
-        className="flex items-center gap-2 px-4 py-2 bg-yellow-100 text-yellow-700 rounded-lg font-medium hover:bg-yellow-200 transition-colors duration-200"
+        className="flex items-center gap-1 px-3 py-1 bg-yellow-100 text-yellow-700 rounded-lg text-sm font-medium hover:bg-yellow-200 transition-colors duration-200"
       >
-        <Clock className="h-4 w-4" />
+        <Clock className="h-3 w-3" />
         Pending
       </button>
     );
@@ -249,7 +249,7 @@ const MyRequests: React.FC<MyRequestsProps> = ({ currentUser }) => {
         </div>
       </div>
 
-      {/* Received Requests */}
+      {/* Received Requests - Concise Cards */}
       <div className="space-y-4">
         <h2 className="text-lg font-semibold text-gray-900">Received Requests</h2>
         
@@ -259,65 +259,66 @@ const MyRequests: React.FC<MyRequestsProps> = ({ currentUser }) => {
             <p className="text-gray-500">No received requests found</p>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {receivedRequests.map((request) => (
-              <div key={request.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
-                <div className="flex items-start gap-4">
+              <div key={request.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow duration-200">
+                <div className="flex items-center gap-3">
                   <div className="relative">
                     <img
                       src={request.avatar}
                       alt={request.name}
-                      className="w-16 h-16 rounded-full object-cover"
+                      className="w-12 h-12 rounded-full object-cover"
                     />
                     {request.isOnline && (
-                      <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white"></div>
+                      <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
                     )}
                   </div>
                   
-                  <div className="flex-1">
-                    <div className="flex items-start justify-between mb-2">
-                      <div>
-                        <h3 className="font-semibold text-gray-900 text-lg">{request.name}</h3>
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            request.role === 'mentor' 
-                              ? 'bg-purple-100 text-purple-800' 
-                              : 'bg-blue-100 text-blue-800'
-                          }`}>
-                            {request.role}
-                          </span>
-                          <span className="text-sm text-gray-500">
-                            {formatTimeAgo(request.requestDate!)}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-1 mb-2">
-                          {renderStars(request.rating || 0)}
-                          <span className="text-sm text-gray-600 ml-1">({request.rating})</span>
-                        </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-semibold text-gray-900 text-sm truncate">{request.name}</h3>
+                        <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                          request.role === 'mentor' 
+                            ? 'bg-purple-100 text-purple-800' 
+                            : 'bg-blue-100 text-blue-800'
+                        }`}>
+                          {request.role}
+                        </span>
+                        <span className="text-xs text-gray-500">
+                          {formatTimeAgo(request.requestDate!)}
+                        </span>
                       </div>
+                      {renderActionButtons(request)}
                     </div>
                     
-                    <p className="text-gray-600 text-sm mb-3">{request.bio}</p>
+                    <div className="flex items-center gap-1 mb-2">
+                      {renderStars(request.rating || 0)}
+                      <span className="text-xs text-gray-600">({request.rating})</span>
+                    </div>
+                    
+                    <p className="text-gray-600 text-sm mb-2 line-clamp-1">{request.bio}</p>
                     
                     {request.message && (
-                      <div className="bg-blue-50 p-3 rounded-lg mb-4">
-                        <p className="text-sm text-gray-700 italic">"{request.message}"</p>
+                      <div className="bg-blue-50 p-2 rounded-lg mb-2">
+                        <p className="text-xs text-gray-700 italic line-clamp-2">"{request.message}"</p>
                       </div>
                     )}
                     
-                    <div className="flex items-center justify-between">
-                      <div className="flex flex-wrap gap-1">
-                        {request.skills?.slice(0, 3).map((skill) => (
-                          <span
-                            key={skill}
-                            className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md font-medium"
-                          >
-                            {skill}
-                          </span>
-                        ))}
-                      </div>
-                      
-                      {renderActionButtons(request)}
+                    <div className="flex flex-wrap gap-1">
+                      {request.skills?.slice(0, 2).map((skill) => (
+                        <span
+                          key={skill}
+                          className="px-2 py-0.5 bg-gray-100 text-gray-700 text-xs rounded-md font-medium"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                      {request.skills && request.skills.length > 2 && (
+                        <span className="px-2 py-0.5 bg-gray-100 text-gray-700 text-xs rounded-md font-medium">
+                          +{request.skills.length - 2}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -327,7 +328,7 @@ const MyRequests: React.FC<MyRequestsProps> = ({ currentUser }) => {
         )}
       </div>
 
-      {/* Sent Requests */}
+      {/* Sent Requests - Concise Cards */}
       <div className="space-y-4">
         <h2 className="text-lg font-semibold text-gray-900">Sent Requests</h2>
         
@@ -337,59 +338,60 @@ const MyRequests: React.FC<MyRequestsProps> = ({ currentUser }) => {
             <p className="text-gray-500">No sent requests found</p>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {sentRequests.map((request) => (
-              <div key={request.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
-                <div className="flex items-start gap-4">
+              <div key={request.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow duration-200">
+                <div className="flex items-center gap-3">
                   <div className="relative">
                     <img
                       src={request.avatar}
                       alt={request.name}
-                      className="w-16 h-16 rounded-full object-cover"
+                      className="w-12 h-12 rounded-full object-cover"
                     />
                     {request.isOnline && (
-                      <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white"></div>
+                      <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
                     )}
                   </div>
                   
-                  <div className="flex-1">
-                    <div className="flex items-start justify-between mb-2">
-                      <div>
-                        <h3 className="font-semibold text-gray-900 text-lg">{request.name}</h3>
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            request.role === 'mentor' 
-                              ? 'bg-purple-100 text-purple-800' 
-                              : 'bg-blue-100 text-blue-800'
-                          }`}>
-                            {request.role}
-                          </span>
-                          <span className="text-sm text-gray-500">
-                            Sent {formatTimeAgo(request.requestDate!)}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-1 mb-2">
-                          {renderStars(request.rating || 0)}
-                          <span className="text-sm text-gray-600 ml-1">({request.rating})</span>
-                        </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-semibold text-gray-900 text-sm truncate">{request.name}</h3>
+                        <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                          request.role === 'mentor' 
+                            ? 'bg-purple-100 text-purple-800' 
+                            : 'bg-blue-100 text-blue-800'
+                        }`}>
+                          {request.role}
+                        </span>
+                        <span className="text-xs text-gray-500">
+                          Sent {formatTimeAgo(request.requestDate!)}
+                        </span>
                       </div>
+                      {renderActionButtons(request)}
                     </div>
                     
-                    <p className="text-gray-600 text-sm mb-3">{request.bio}</p>
+                    <div className="flex items-center gap-1 mb-2">
+                      {renderStars(request.rating || 0)}
+                      <span className="text-xs text-gray-600">({request.rating})</span>
+                    </div>
                     
-                    <div className="flex items-center justify-between">
-                      <div className="flex flex-wrap gap-1">
-                        {request.skills?.slice(0, 3).map((skill) => (
-                          <span
-                            key={skill}
-                            className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md font-medium"
-                          >
-                            {skill}
-                          </span>
-                        ))}
-                      </div>
-                      
-                      {renderActionButtons(request)}
+                    <p className="text-gray-600 text-sm mb-2 line-clamp-1">{request.bio}</p>
+                    
+                    <div className="flex flex-wrap gap-1">
+                      {request.skills?.slice(0, 2).map((skill) => (
+                        <span
+                          key={skill}
+                          className="px-2 py-0.5 bg-gray-100 text-gray-700 text-xs rounded-md font-medium"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                      {request.skills && request.skills.length > 2 && (
+                        <span className="px-2 py-0.5 bg-gray-100 text-gray-700 text-xs rounded-md font-medium">
+                          +{request.skills.length - 2}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
