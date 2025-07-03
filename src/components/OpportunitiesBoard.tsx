@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Briefcase, MapPin, Clock, DollarSign, Users, Star, ExternalLink, Bookmark, BookmarkCheck, Building, Wifi, UserCheck } from 'lucide-react';
+import { Briefcase, MapPin, Clock, DollarSign, Users, ExternalLink, Bookmark, BookmarkCheck, Building, Wifi } from 'lucide-react';
 import UniversalSearchFilters from './UniversalSearchFilters';
 import { useUniversalFilters } from '../hooks/useUniversalFilters';
 import { User } from '../types';
@@ -22,11 +22,6 @@ interface Opportunity {
   applicants: number;
   isSaved: boolean;
   poster: User;
-  connectionInsights?: {
-    appliedCount: number;
-    hiredCount: number;
-    connectionNames: string[];
-  };
 }
 
 interface OpportunitiesBoardProps {
@@ -61,11 +56,6 @@ const OpportunitiesBoard: React.FC<OpportunitiesBoardProps> = ({ currentUser }) 
         isOnline: true,
         rating: 4.8,
         availability: 'available'
-      },
-      connectionInsights: {
-        appliedCount: 3,
-        hiredCount: 0,
-        connectionNames: ['Alex Rodriguez', 'Maria Garcia', 'David Kim']
       }
     },
     {
@@ -94,11 +84,6 @@ const OpportunitiesBoard: React.FC<OpportunitiesBoardProps> = ({ currentUser }) 
         isOnline: false,
         rating: 4.6,
         availability: 'busy'
-      },
-      connectionInsights: {
-        appliedCount: 1,
-        hiredCount: 1,
-        connectionNames: ['Jennifer Liu']
       }
     },
     {
@@ -183,11 +168,6 @@ const OpportunitiesBoard: React.FC<OpportunitiesBoardProps> = ({ currentUser }) 
         isOnline: true,
         rating: 4.4,
         availability: 'available'
-      },
-      connectionInsights: {
-        appliedCount: 2,
-        hiredCount: 0,
-        connectionNames: ['Sarah Wilson', 'Emma Davis']
       }
     }
   ]);
@@ -249,16 +229,6 @@ const OpportunitiesBoard: React.FC<OpportunitiesBoardProps> = ({ currentUser }) 
     return `${days} days ago`;
   };
 
-  const formatDeadline = (date: Date) => {
-    const now = new Date();
-    const diff = date.getTime() - now.getTime();
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    
-    if (days <= 0) return 'Deadline passed';
-    if (days === 1) return '1 day left';
-    return `${days} days left`;
-  };
-
   const getTypeColor = (type: string) => {
     switch (type) {
       case 'full-time': return 'bg-green-100 text-green-800';
@@ -276,44 +246,6 @@ const OpportunitiesBoard: React.FC<OpportunitiesBoardProps> = ({ currentUser }) 
       case 'hybrid': return 'bg-purple-100 text-purple-800';
       default: return 'bg-gray-100 text-gray-800';
     }
-  };
-
-  const getFieldColor = (field: string) => {
-    switch (field) {
-      case 'tech': return 'bg-indigo-100 text-indigo-800';
-      case 'marketing': return 'bg-pink-100 text-pink-800';
-      case 'design': return 'bg-yellow-100 text-yellow-800';
-      case 'finance': return 'bg-green-100 text-green-800';
-      case 'sales': return 'bg-red-100 text-red-800';
-      case 'operations': return 'bg-gray-100 text-gray-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const renderConnectionInsights = (insights?: Opportunity['connectionInsights']) => {
-    if (!insights || (insights.appliedCount === 0 && insights.hiredCount === 0)) return null;
-
-    return (
-      <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
-        <div className="flex items-center gap-2 mb-2">
-          <Users className="h-4 w-4 text-blue-600" />
-          <span className="text-sm font-medium text-blue-800">From your network:</span>
-        </div>
-        <div className="space-y-1 text-sm text-blue-700">
-          {insights.appliedCount > 0 && (
-            <div className="flex items-center gap-1">
-              <span>{insights.appliedCount} connection{insights.appliedCount > 1 ? 's' : ''} applied</span>
-            </div>
-          )}
-          {insights.hiredCount > 0 && (
-            <div className="flex items-center gap-1">
-              <UserCheck className="h-3 w-3 text-green-600" />
-              <span className="text-green-700">{insights.hiredCount} connection{insights.hiredCount > 1 ? 's' : ''} hired</span>
-            </div>
-          )}
-        </div>
-      </div>
-    );
   };
 
   return (
@@ -385,23 +317,6 @@ const OpportunitiesBoard: React.FC<OpportunitiesBoardProps> = ({ currentUser }) 
             <Building className="absolute right-2 top-2.5 h-4 w-4 text-gray-400 pointer-events-none" />
           </div>
         </div>
-
-        {/* Active Job Filters Display */}
-        {(workTypeFilter !== 'all' || fieldFilter !== 'all') && (
-          <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-gray-100">
-            <span className="text-xs font-medium text-gray-500 py-1">Job filters:</span>
-            {workTypeFilter !== 'all' && (
-              <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full font-medium">
-                {workTypeFilter.charAt(0).toUpperCase() + workTypeFilter.slice(1)}
-              </span>
-            )}
-            {fieldFilter !== 'all' && (
-              <span className="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full font-medium">
-                {fieldFilter.charAt(0).toUpperCase() + fieldFilter.slice(1)}
-              </span>
-            )}
-          </div>
-        )}
       </div>
 
       {/* Results Summary */}
@@ -411,7 +326,7 @@ const OpportunitiesBoard: React.FC<OpportunitiesBoardProps> = ({ currentUser }) 
         </h2>
       </div>
 
-      {/* Opportunities List */}
+      {/* Opportunities List - Simplified */}
       {finalFilteredOpportunities.length === 0 ? (
         <div className="text-center py-12">
           <Briefcase className="h-12 w-12 text-gray-300 mx-auto mb-4" />
@@ -419,30 +334,37 @@ const OpportunitiesBoard: React.FC<OpportunitiesBoardProps> = ({ currentUser }) 
           <p className="text-gray-400 text-sm mt-2">Try adjusting your filters or search terms</p>
         </div>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-4">
           {finalFilteredOpportunities.map((opportunity) => (
-            <div key={opportunity.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
+            <div key={opportunity.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
               {/* Header */}
               <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 flex-1">
                   <img
                     src={opportunity.companyLogo}
                     alt={opportunity.company}
-                    className="w-16 h-16 rounded-lg object-cover border border-gray-200"
+                    className="w-12 h-12 rounded-lg object-cover border border-gray-200"
                   />
-                  <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-1">{opportunity.title}</h3>
-                    <p className="text-lg text-gray-700 font-medium">{opportunity.company}</p>
-                    <div className="flex items-center gap-2 mt-2">
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${getTypeColor(opportunity.type)}`}>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-1">{opportunity.title}</h3>
+                    <p className="text-gray-700 font-medium mb-2">{opportunity.company}</p>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getTypeColor(opportunity.type)}`}>
                         {opportunity.type.replace('-', ' ')}
                       </span>
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${getWorkTypeColor(opportunity.workType)}`}>
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getWorkTypeColor(opportunity.workType)}`}>
                         {opportunity.workType}
                       </span>
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${getFieldColor(opportunity.field)}`}>
-                        {opportunity.field}
-                      </span>
+                      <div className="flex items-center gap-1 text-gray-600 text-sm">
+                        <MapPin className="h-3 w-3" />
+                        <span>{opportunity.location}</span>
+                      </div>
+                      {opportunity.salary && (
+                        <div className="flex items-center gap-1 text-gray-600 text-sm">
+                          <DollarSign className="h-3 w-3" />
+                          <span>{opportunity.salary}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -463,53 +385,26 @@ const OpportunitiesBoard: React.FC<OpportunitiesBoardProps> = ({ currentUser }) 
                 </button>
               </div>
 
-              {/* Connection Insights */}
-              {renderConnectionInsights(opportunity.connectionInsights)}
+              {/* Description - Shortened */}
+              <p className="text-gray-700 mb-4 line-clamp-2">{opportunity.description}</p>
 
-              {/* Details */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                <div className="flex items-center gap-2 text-gray-600">
-                  <MapPin className="h-4 w-4" />
-                  <span className="text-sm">{opportunity.location}</span>
-                </div>
-                {opportunity.salary && (
-                  <div className="flex items-center gap-2 text-gray-600">
-                    <DollarSign className="h-4 w-4" />
-                    <span className="text-sm">{opportunity.salary}</span>
-                  </div>
-                )}
-                <div className="flex items-center gap-2 text-gray-600">
-                  <Users className="h-4 w-4" />
-                  <span className="text-sm">{opportunity.applicants} applicants</span>
-                </div>
-              </div>
-
-              {/* Description */}
-              <p className="text-gray-700 mb-4 leading-relaxed">{opportunity.description}</p>
-
-              {/* Skills */}
+              {/* Skills - Limited to 3 */}
               <div className="mb-4">
-                <h4 className="text-sm font-medium text-gray-900 mb-2">Required Skills:</h4>
                 <div className="flex flex-wrap gap-2">
-                  {opportunity.skills.map((skill) => (
+                  {opportunity.skills.slice(0, 3).map((skill) => (
                     <span
                       key={skill}
-                      className="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-md font-medium"
+                      className="px-2 py-1 bg-blue-100 text-blue-800 text-sm rounded-md font-medium"
                     >
                       {skill}
                     </span>
                   ))}
+                  {opportunity.skills.length > 3 && (
+                    <span className="px-2 py-1 bg-gray-100 text-gray-700 text-sm rounded-md font-medium">
+                      +{opportunity.skills.length - 3} more
+                    </span>
+                  )}
                 </div>
-              </div>
-
-              {/* Requirements */}
-              <div className="mb-4">
-                <h4 className="text-sm font-medium text-gray-900 mb-2">Requirements:</h4>
-                <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
-                  {opportunity.requirements.map((req, index) => (
-                    <li key={index}>{req}</li>
-                  ))}
-                </ul>
               </div>
 
               {/* Footer */}
@@ -519,31 +414,16 @@ const OpportunitiesBoard: React.FC<OpportunitiesBoardProps> = ({ currentUser }) 
                     <Clock className="h-4 w-4" />
                     <span>Posted {formatTimeAgo(opportunity.postedDate)}</span>
                   </div>
-                  {opportunity.deadline && (
-                    <div className="flex items-center gap-1">
-                      <Clock className="h-4 w-4" />
-                      <span className={opportunity.deadline.getTime() - Date.now() < 604800000 ? 'text-red-600 font-medium' : ''}>
-                        {formatDeadline(opportunity.deadline)}
-                      </span>
-                    </div>
-                  )}
+                  <div className="flex items-center gap-1">
+                    <Users className="h-4 w-4" />
+                    <span>{opportunity.applicants} applicants</span>
+                  </div>
                 </div>
                 
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-2">
-                    <img
-                      src={opportunity.poster.avatar}
-                      alt={opportunity.poster.name}
-                      className="w-6 h-6 rounded-full object-cover"
-                    />
-                    <span className="text-sm text-gray-600">Posted by {opportunity.poster.name}</span>
-                  </div>
-                  
-                  <button className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition-colors duration-200">
-                    <ExternalLink className="h-4 w-4" />
-                    Apply Now
-                  </button>
-                </div>
+                <button className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition-colors duration-200">
+                  <ExternalLink className="h-4 w-4" />
+                  Apply Now
+                </button>
               </div>
             </div>
           ))}
