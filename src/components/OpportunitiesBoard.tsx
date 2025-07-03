@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Briefcase, MapPin, Clock, DollarSign, Users, ExternalLink, Bookmark, BookmarkCheck, Building, Wifi } from 'lucide-react';
+import { Briefcase, MapPin, Clock, DollarSign, Users, ExternalLink, Bookmark, BookmarkCheck, Building, Wifi, UserCheck } from 'lucide-react';
 import UniversalSearchFilters from './UniversalSearchFilters';
 import { useUniversalFilters } from '../hooks/useUniversalFilters';
 import { User } from '../types';
@@ -22,6 +22,10 @@ interface Opportunity {
   applicants: number;
   isSaved: boolean;
   poster: User;
+  connectionInsights?: {
+    appliedCount: number;
+    connectionNames: string[];
+  };
 }
 
 interface OpportunitiesBoardProps {
@@ -56,6 +60,10 @@ const OpportunitiesBoard: React.FC<OpportunitiesBoardProps> = ({ currentUser }) 
         isOnline: true,
         rating: 4.8,
         availability: 'available'
+      },
+      connectionInsights: {
+        appliedCount: 3,
+        connectionNames: ['Alex Rodriguez', 'Maria Garcia', 'David Kim']
       }
     },
     {
@@ -84,6 +92,10 @@ const OpportunitiesBoard: React.FC<OpportunitiesBoardProps> = ({ currentUser }) 
         isOnline: false,
         rating: 4.6,
         availability: 'busy'
+      },
+      connectionInsights: {
+        appliedCount: 1,
+        connectionNames: ['Jennifer Liu']
       }
     },
     {
@@ -168,6 +180,10 @@ const OpportunitiesBoard: React.FC<OpportunitiesBoardProps> = ({ currentUser }) 
         isOnline: true,
         rating: 4.4,
         availability: 'available'
+      },
+      connectionInsights: {
+        appliedCount: 2,
+        connectionNames: ['Sarah Wilson', 'Emma Davis']
       }
     }
   ]);
@@ -246,6 +262,25 @@ const OpportunitiesBoard: React.FC<OpportunitiesBoardProps> = ({ currentUser }) 
       case 'hybrid': return 'bg-purple-100 text-purple-800';
       default: return 'bg-gray-100 text-gray-800';
     }
+  };
+
+  const renderConnectionInsights = (insights?: Opportunity['connectionInsights']) => {
+    if (!insights || insights.appliedCount === 0) return null;
+
+    return (
+      <div className="mb-3 p-2 bg-blue-50 rounded-lg border border-blue-200">
+        <div className="flex items-center gap-2 text-sm">
+          <UserCheck className="h-4 w-4 text-blue-600" />
+          <span className="text-blue-800 font-medium">
+            {insights.appliedCount} {insights.appliedCount === 1 ? 'connection' : 'connections'} applied
+          </span>
+          <span className="text-blue-600">
+            ({insights.connectionNames.slice(0, 2).join(', ')}
+            {insights.appliedCount > 2 && ` +${insights.appliedCount - 2} more`})
+          </span>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -384,6 +419,9 @@ const OpportunitiesBoard: React.FC<OpportunitiesBoardProps> = ({ currentUser }) 
                   )}
                 </button>
               </div>
+
+              {/* Connection Insights - Concise */}
+              {renderConnectionInsights(opportunity.connectionInsights)}
 
               {/* Description - Shortened */}
               <p className="text-gray-700 mb-4 line-clamp-2">{opportunity.description}</p>
