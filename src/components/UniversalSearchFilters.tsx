@@ -51,17 +51,17 @@ const Dropdown: React.FC<DropdownProps> = ({ label, value, options, onChange, ic
   const selectedOption = options.find(option => option.id === value);
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative w-full min-w-[160px]" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:border-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 min-w-[140px] justify-between"
+        className="flex items-center gap-2 px-4 py-3 bg-white border border-gray-300 rounded-lg hover:border-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 w-full justify-between"
       >
-        <div className="flex items-center gap-2">
-          {Icon && <Icon className="h-4 w-4 text-gray-500" />}
-          <span className="text-sm font-medium text-gray-700">{label}:</span>
-          <span className="text-sm text-gray-900">{selectedOption?.label}</span>
+        <div className="flex items-center gap-2 min-w-0">
+          {Icon && <Icon className="h-4 w-4 text-gray-500 flex-shrink-0" />}
+          <span className="text-sm font-medium text-gray-700 flex-shrink-0">{label}:</span>
+          <span className="text-sm text-gray-900 truncate">{selectedOption?.label}</span>
         </div>
-        <ChevronDown className={`h-4 w-4 text-gray-500 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`h-4 w-4 text-gray-500 transition-transform duration-200 flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
       {isOpen && (
@@ -79,8 +79,8 @@ const Dropdown: React.FC<DropdownProps> = ({ label, value, options, onChange, ic
                   value === option.id ? 'bg-blue-50 text-blue-700' : 'text-gray-700'
                 }`}
               >
-                {OptionIcon && <OptionIcon className="h-4 w-4" />}
-                <span className="text-sm">{option.label}</span>
+                {OptionIcon && <OptionIcon className="h-4 w-4 flex-shrink-0" />}
+                <span className="text-sm truncate">{option.label}</span>
               </button>
             );
           })}
@@ -222,7 +222,7 @@ const UniversalSearchFilters: React.FC<UniversalSearchFiltersProps> = ({
       </div>
 
       {/* Filters Section */}
-      <div className="space-y-4">
+      <div className="space-y-6">
         {/* Filter Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -240,8 +240,8 @@ const UniversalSearchFilters: React.FC<UniversalSearchFiltersProps> = ({
           )}
         </div>
 
-        {/* Filter Dropdowns */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
+        {/* Filter Dropdowns - Responsive Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
           <Dropdown
             label="Sort"
             value={sortBy}
@@ -285,12 +285,12 @@ const UniversalSearchFilters: React.FC<UniversalSearchFiltersProps> = ({
 
         {/* Active Filters Display */}
         {hasActiveFilters() && (
-          <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-100">
+          <div className="flex flex-wrap gap-2 pt-4 border-t border-gray-100">
             <span className="text-xs font-medium text-gray-500 py-1">Active filters:</span>
             {getFilterSummary().map((filter, index) => (
               <span
                 key={index}
-                className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full font-medium"
+                className="px-3 py-1 bg-blue-100 text-blue-800 text-xs rounded-full font-medium"
               >
                 {filter}
               </span>
