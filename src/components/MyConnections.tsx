@@ -134,19 +134,11 @@ const MyConnections: React.FC<MyConnectionsProps> = ({ currentUser }) => {
     return `${days}d ago`;
   };
 
-  const formatConnectionDate = (date: Date) => {
-    return date.toLocaleDateString('en-US', { 
-      month: 'short', 
-      day: 'numeric',
-      year: 'numeric'
-    });
-  };
-
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
       <Star
         key={i}
-        className={`h-4 w-4 ${
+        className={`h-3 w-3 ${
           i < Math.floor(rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'
         }`}
       />
@@ -188,7 +180,7 @@ const MyConnections: React.FC<MyConnectionsProps> = ({ currentUser }) => {
         </h2>
       </div>
 
-      {/* Connections Grid */}
+      {/* Connections Grid - More Concise */}
       {filteredConnections.length === 0 ? (
         <div className="text-center py-12">
           <Users className="h-12 w-12 text-gray-300 mx-auto mb-4" />
@@ -196,55 +188,46 @@ const MyConnections: React.FC<MyConnectionsProps> = ({ currentUser }) => {
           <p className="text-gray-400 text-sm mt-2">Try adjusting your filters or search terms</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredConnections.map((connection) => (
-            <div key={connection.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
-              {/* User Header */}
-              <div className="flex items-center gap-4 mb-4">
+            <div key={connection.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow duration-200">
+              {/* User Header - Compact */}
+              <div className="flex items-center gap-3 mb-3">
                 <div className="relative">
                   <img
                     src={connection.avatar}
                     alt={connection.name}
-                    className="w-16 h-16 rounded-full object-cover"
+                    className="w-12 h-12 rounded-full object-cover"
                   />
                   {connection.isOnline && (
-                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white"></div>
+                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
                   )}
                 </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-gray-900 text-lg">{connection.name}</h3>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-gray-900 text-base truncate">{connection.name}</h3>
                   <div className="flex items-center gap-2 mb-1">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
                       connection.role === 'mentor' 
                         ? 'bg-purple-100 text-purple-800' 
                         : 'bg-blue-100 text-blue-800'
                     }`}>
                       {connection.role}
                     </span>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      connection.availability === 'available' 
-                        ? 'bg-green-100 text-green-800'
-                        : connection.availability === 'busy'
-                        ? 'bg-yellow-100 text-yellow-800'
-                        : 'bg-gray-100 text-gray-800'
-                    }`}>
-                      {connection.availability}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    {renderStars(connection.rating || 0)}
-                    <span className="text-sm text-gray-600 ml-1">({connection.rating})</span>
+                    <div className="flex items-center gap-1">
+                      {renderStars(connection.rating || 0)}
+                      <span className="text-xs text-gray-600">({connection.rating})</span>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Bio */}
-              <p className="text-gray-600 text-sm mb-4 line-clamp-2">{connection.bio}</p>
+              {/* Bio - Single line */}
+              <p className="text-gray-600 text-sm mb-3 line-clamp-1">{connection.bio}</p>
 
-              {/* Skills */}
-              <div className="mb-4">
+              {/* Skills - Limited to 2 */}
+              <div className="mb-3">
                 <div className="flex flex-wrap gap-1">
-                  {connection.skills?.slice(0, 3).map((skill) => (
+                  {connection.skills?.slice(0, 2).map((skill) => (
                     <span
                       key={skill}
                       className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md font-medium"
@@ -252,56 +235,43 @@ const MyConnections: React.FC<MyConnectionsProps> = ({ currentUser }) => {
                       {skill}
                     </span>
                   ))}
-                  {connection.skills && connection.skills.length > 3 && (
+                  {connection.skills && connection.skills.length > 2 && (
                     <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md font-medium">
-                      +{connection.skills.length - 3} more
+                      +{connection.skills.length - 2}
                     </span>
                   )}
                 </div>
               </div>
 
-              {/* Connection Info */}
-              <div className="space-y-2 text-sm text-gray-500 mb-4">
-                {connection.location && (
-                  <div className="flex items-center gap-1">
-                    <MapPin className="h-3 w-3" />
-                    <span>{connection.location}</span>
-                  </div>
-                )}
+              {/* Quick Info - Compact */}
+              <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
                 <div className="flex items-center gap-1">
-                  <Clock className="h-3 w-3" />
-                  <span>Connected {formatConnectionDate(connection.connectionDate!)}</span>
+                  <MapPin className="h-3 w-3" />
+                  <span className="truncate">{connection.location}</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Users className="h-3 w-3" />
-                  <span>{connection.mutualConnections} mutual connections</span>
+                  <span>{connection.mutualConnections} mutual</span>
                 </div>
-                {connection.lastActive && (
-                  <div className="text-xs text-gray-400">
-                    Last active {formatTimeAgo(connection.lastActive)}
-                  </div>
-                )}
               </div>
 
-              {/* Action Buttons */}
-              <div className="space-y-2">
-                <div className="flex gap-2">
-                  <button className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition-colors duration-200 flex-1">
-                    <MessageCircle className="h-4 w-4" />
-                    Message
-                  </button>
-                  <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors duration-200">
-                    <Eye className="h-4 w-4" />
-                    Profile
-                  </button>
+              {/* Last Active */}
+              {connection.lastActive && (
+                <div className="text-xs text-gray-400 mb-3">
+                  Active {formatTimeAgo(connection.lastActive)}
                 </div>
-                
-                <div className="flex justify-center">
-                  <button className="flex items-center gap-2 px-4 py-2 bg-red-100 text-red-700 rounded-lg font-medium hover:bg-red-200 transition-colors duration-200">
-                    <UserMinus className="h-4 w-4" />
-                    Remove Connection
-                  </button>
-                </div>
+              )}
+
+              {/* Action Buttons - Simplified */}
+              <div className="flex gap-2">
+                <button className="flex items-center gap-1 px-3 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors duration-200 flex-1">
+                  <MessageCircle className="h-3 w-3" />
+                  Message
+                </button>
+                <button className="flex items-center gap-1 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors duration-200">
+                  <Eye className="h-3 w-3" />
+                  View
+                </button>
               </div>
             </div>
           ))}
