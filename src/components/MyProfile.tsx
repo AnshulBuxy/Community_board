@@ -69,8 +69,8 @@ const MyProfile: React.FC<MyProfileProps> = ({ currentUser }) => {
     ]
   });
 
-  // Mock saved data
-  const [savedPosts] = useState([
+  // Mock saved data with state management for unsaving
+  const [savedPosts, setSavedPosts] = useState([
     {
       id: '1',
       type: 'post',
@@ -115,7 +115,7 @@ const MyProfile: React.FC<MyProfileProps> = ({ currentUser }) => {
     }
   ]);
 
-  const [savedJobs] = useState([
+  const [savedJobs, setSavedJobs] = useState([
     {
       id: '1',
       type: 'job',
@@ -181,6 +181,15 @@ const MyProfile: React.FC<MyProfileProps> = ({ currentUser }) => {
   const [tempData, setTempData] = useState(profileData);
   const [newSkill, setNewSkill] = useState('');
   const [newInterest, setNewInterest] = useState('');
+
+  // Unsave functions
+  const handleUnsavePost = (postId: string) => {
+    setSavedPosts(prev => prev.filter(post => post.id !== postId));
+  };
+
+  const handleUnsaveJob = (jobId: string) => {
+    setSavedJobs(prev => prev.filter(job => job.id !== jobId));
+  };
 
   const handleEdit = () => {
     setTempData(profileData);
@@ -735,7 +744,11 @@ const MyProfile: React.FC<MyProfileProps> = ({ currentUser }) => {
                             </button>
                           </div>
                           
-                          <button className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 bg-yellow-50 text-yellow-700 hover:bg-yellow-100">
+                          <button 
+                            onClick={() => handleUnsavePost(item.id)}
+                            className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 bg-yellow-50 text-yellow-700 hover:bg-yellow-100"
+                            title="Click to unsave this post"
+                          >
                             <BookmarkCheck className="h-4 w-4 fill-current" />
                             <span className="text-sm font-medium">Saved</span>
                           </button>
@@ -778,7 +791,11 @@ const MyProfile: React.FC<MyProfileProps> = ({ currentUser }) => {
                         </div>
                       </div>
                       
-                      <button className="p-2 rounded-lg transition-colors duration-200 bg-yellow-100 text-yellow-700 hover:bg-yellow-200">
+                      <button 
+                        onClick={() => handleUnsaveJob(item.id)}
+                        className="p-2 rounded-lg transition-colors duration-200 bg-yellow-100 text-yellow-700 hover:bg-yellow-200"
+                        title="Click to unsave this job"
+                      >
                         <BookmarkCheck className="h-5 w-5 fill-current" />
                       </button>
                     </div>
