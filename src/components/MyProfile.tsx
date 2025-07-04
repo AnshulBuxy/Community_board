@@ -19,7 +19,14 @@ import {
   Eye,
   EyeOff,
   Plus,
-  Trash2
+  Trash2,
+  Bookmark,
+  BookmarkCheck,
+  Briefcase,
+  Heart,
+  Building,
+  DollarSign,
+  Clock
 } from 'lucide-react';
 import { User as UserType } from '../types';
 
@@ -30,6 +37,7 @@ interface MyProfileProps {
 const MyProfile: React.FC<MyProfileProps> = ({ currentUser }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [activeSection, setActiveSection] = useState('overview');
+  const [savedFilter, setSavedFilter] = useState<'all' | 'posts' | 'jobs'>('all');
   
   // Profile data state
   const [profileData, setProfileData] = useState({
@@ -48,6 +56,73 @@ const MyProfile: React.FC<MyProfileProps> = ({ currentUser }) => {
       { id: '3', title: 'Community Helper', description: 'Helped 5 fellow students', date: '2023-08-10' }
     ]
   });
+
+  // Mock saved data
+  const [savedPosts] = useState([
+    {
+      id: '1',
+      type: 'post',
+      author: {
+        name: 'Maria Rodriguez',
+        username: 'maria_dev',
+        avatar: 'https://images.pexels.com/photos/1181424/pexels-photo-1181424.jpeg?auto=compress&cs=tinysrgb&w=150',
+        role: 'mentor'
+      },
+      content: 'Excited to share my latest tutorial on advanced TypeScript patterns! Check it out and let me know what you think.',
+      timestamp: new Date(Date.now() - 7200000),
+      likes: 28,
+      comments: 7,
+      savedDate: new Date(Date.now() - 3600000)
+    },
+    {
+      id: '2',
+      type: 'post',
+      author: {
+        name: 'Alex Thompson',
+        username: 'alex_mentor',
+        avatar: 'https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=150',
+        role: 'mentor'
+      },
+      content: 'Working on a new Python data science course. Would love feedback from the community on what topics you\'d like to see covered!',
+      timestamp: new Date(Date.now() - 14400000),
+      likes: 22,
+      comments: 15,
+      savedDate: new Date(Date.now() - 86400000)
+    }
+  ]);
+
+  const [savedJobs] = useState([
+    {
+      id: '1',
+      type: 'job',
+      title: 'Python Data Scientist Intern',
+      company: 'DataFlow Analytics',
+      companyLogo: 'https://images.pexels.com/photos/1181424/pexels-photo-1181424.jpeg?auto=compress&cs=tinysrgb&w=100',
+      jobType: 'internship',
+      workType: 'hybrid',
+      location: 'New York, NY',
+      salary: '$25/hour',
+      description: 'Join our data science team as an intern and work on real-world machine learning projects.',
+      skills: ['python', 'data-science'],
+      applicants: 23,
+      savedDate: new Date(Date.now() - 172800000)
+    },
+    {
+      id: '2',
+      type: 'job',
+      title: 'Junior Full Stack Developer',
+      company: 'WebSolutions Ltd.',
+      companyLogo: 'https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=100',
+      jobType: 'full-time',
+      workType: 'onsite',
+      location: 'Austin, TX',
+      salary: '$70k - $90k',
+      description: 'Great opportunity for a junior developer to grow their skills in a supportive environment.',
+      skills: ['javascript', 'nodejs', 'react'],
+      applicants: 89,
+      savedDate: new Date(Date.now() - 259200000)
+    }
+  ]);
 
   const [tempData, setTempData] = useState(profileData);
   const [newSkill, setNewSkill] = useState('');
@@ -113,8 +188,39 @@ const MyProfile: React.FC<MyProfileProps> = ({ currentUser }) => {
     ));
   };
 
+  const formatTimeAgo = (date: Date) => {
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const days = Math.floor(hours / 24);
+    
+    if (hours < 1) return 'Just now';
+    if (hours < 24) return `${hours}h ago`;
+    return `${days}d ago`;
+  };
+
+  const getJobTypeColor = (type: string) => {
+    switch (type) {
+      case 'full-time': return 'bg-green-100 text-green-800';
+      case 'part-time': return 'bg-blue-100 text-blue-800';
+      case 'contract': return 'bg-purple-100 text-purple-800';
+      case 'internship': return 'bg-orange-100 text-orange-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const getWorkTypeColor = (workType: string) => {
+    switch (workType) {
+      case 'remote': return 'bg-blue-100 text-blue-800';
+      case 'onsite': return 'bg-gray-100 text-gray-800';
+      case 'hybrid': return 'bg-purple-100 text-purple-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
   const sections = [
     { id: 'overview', label: 'Overview', icon: User },
+    { id: 'saved', label: 'Saved', icon: Bookmark },
     { id: 'achievements', label: 'Achievements', icon: Award },
     { id: 'activity', label: 'Activity', icon: BookOpen },
     { id: 'settings', label: 'Settings', icon: Settings }
@@ -430,6 +536,194 @@ const MyProfile: React.FC<MyProfileProps> = ({ currentUser }) => {
     </div>
   );
 
+  const renderSaved = () => {
+    const allSaved = [
+      ...savedPosts.map(post => ({ ...post, type: 'post' })),
+      ...savedJobs.map(job => ({ ...job, type: 'job' }))
+    ].sort((a, b) => b.savedDate.getTime() - a.savedDate.getTime());
+
+    const filteredSaved = allSaved.filter(item => {
+      if (savedFilter === 'all') return true;
+      if (savedFilter === 'posts') return item.type === 'post';
+      if (savedFilter === 'jobs') return item.type === 'job';
+      return true;
+    });
+
+    return (
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+            <BookmarkCheck className="h-6 w-6 text-yellow-600" />
+            Saved Items ({filteredSaved.length})
+          </h2>
+          
+          {/* Filter Tabs */}
+          <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
+            <button
+              onClick={() => setSavedFilter('all')}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                savedFilter === 'all'
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              All ({allSaved.length})
+            </button>
+            <button
+              onClick={() => setSavedFilter('posts')}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                savedFilter === 'posts'
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              Posts ({savedPosts.length})
+            </button>
+            <button
+              onClick={() => setSavedFilter('jobs')}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                savedFilter === 'jobs'
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              Jobs ({savedJobs.length})
+            </button>
+          </div>
+        </div>
+
+        {/* Saved Items */}
+        {filteredSaved.length === 0 ? (
+          <div className="text-center py-12 bg-white rounded-xl shadow-sm border border-gray-200">
+            <Bookmark className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+            <p className="text-gray-500">No saved {savedFilter === 'all' ? 'items' : savedFilter} yet</p>
+            <p className="text-gray-400 text-sm mt-2">
+              Start saving {savedFilter === 'all' ? 'posts and jobs' : savedFilter} to view them here!
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {filteredSaved.map((item) => (
+              <div key={`${item.type}-${item.id}`} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
+                {item.type === 'post' ? (
+                  // Saved Post
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <img
+                          src={item.author.avatar}
+                          alt={item.author.name}
+                          className="w-10 h-10 rounded-full object-cover"
+                        />
+                        <div>
+                          <h3 className="font-semibold text-gray-900">{item.author.name}</h3>
+                          <div className="flex items-center gap-2">
+                            <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                              item.author.role === 'mentor' 
+                                ? 'bg-purple-100 text-purple-800' 
+                                : 'bg-blue-100 text-blue-800'
+                            }`}>
+                              {item.author.role}
+                            </span>
+                            <span className="text-xs text-gray-500">
+                              Saved {formatTimeAgo(item.savedDate)}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <button className="p-2 text-yellow-600 hover:bg-yellow-50 rounded-lg transition-colors duration-200">
+                        <BookmarkCheck className="h-5 w-5 fill-current" />
+                      </button>
+                    </div>
+                    
+                    <p className="text-gray-700 line-clamp-3">{item.content}</p>
+                    
+                    <div className="flex items-center gap-4 text-sm text-gray-500">
+                      <div className="flex items-center gap-1">
+                        <Heart className="h-4 w-4" />
+                        <span>{item.likes} likes</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <MessageCircle className="h-4 w-4" />
+                        <span>{item.comments} comments</span>
+                      </div>
+                      <span>Posted {formatTimeAgo(item.timestamp)}</span>
+                    </div>
+                  </div>
+                ) : (
+                  // Saved Job
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <img
+                          src={item.companyLogo}
+                          alt={item.company}
+                          className="w-12 h-12 rounded-lg object-cover border border-gray-200"
+                        />
+                        <div>
+                          <h3 className="font-semibold text-gray-900 text-lg">{item.title}</h3>
+                          <p className="text-gray-700 font-medium">{item.company}</p>
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getJobTypeColor(item.jobType)}`}>
+                              {item.jobType.replace('-', ' ')}
+                            </span>
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getWorkTypeColor(item.workType)}`}>
+                              {item.workType}
+                            </span>
+                            <span className="text-xs text-gray-500">
+                              Saved {formatTimeAgo(item.savedDate)}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <button className="p-2 text-yellow-600 hover:bg-yellow-50 rounded-lg transition-colors duration-200">
+                        <BookmarkCheck className="h-5 w-5 fill-current" />
+                      </button>
+                    </div>
+                    
+                    <p className="text-gray-700 line-clamp-2">{item.description}</p>
+                    
+                    <div className="flex items-center gap-4 text-sm text-gray-600">
+                      <div className="flex items-center gap-1">
+                        <MapPin className="h-4 w-4" />
+                        <span>{item.location}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <DollarSign className="h-4 w-4" />
+                        <span>{item.salary}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Users className="h-4 w-4" />
+                        <span>{item.applicants} applicants</span>
+                      </div>
+                    </div>
+                    
+                    <div className="flex flex-wrap gap-2">
+                      {item.skills.slice(0, 3).map((skill) => (
+                        <span
+                          key={skill}
+                          className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-md font-medium"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                      {item.skills.length > 3 && (
+                        <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md font-medium">
+                          +{item.skills.length - 3} more
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
   const renderAchievements = () => (
     <div className="space-y-4">
       <h2 className="text-2xl font-bold text-gray-900">Achievements</h2>
@@ -599,6 +893,7 @@ const MyProfile: React.FC<MyProfileProps> = ({ currentUser }) => {
 
       {/* Section Content */}
       {activeSection === 'overview' && renderOverview()}
+      {activeSection === 'saved' && renderSaved()}
       {activeSection === 'achievements' && renderAchievements()}
       {activeSection === 'activity' && renderActivity()}
       {activeSection === 'settings' && renderSettings()}
