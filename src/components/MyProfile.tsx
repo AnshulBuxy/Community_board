@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   User, 
   Mail, 
@@ -38,6 +38,15 @@ const MyProfile: React.FC<MyProfileProps> = ({ currentUser }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [activeSection, setActiveSection] = useState('overview');
   const [savedFilter, setSavedFilter] = useState<'all' | 'posts' | 'jobs'>('all');
+  
+  // Check for stored profile section on component mount
+  useEffect(() => {
+    const storedSection = localStorage.getItem('profileSection');
+    if (storedSection) {
+      setActiveSection(storedSection);
+      localStorage.removeItem('profileSection'); // Clear after use
+    }
+  }, []);
   
   // Profile data state
   const [profileData, setProfileData] = useState({
@@ -219,7 +228,7 @@ const MyProfile: React.FC<MyProfileProps> = ({ currentUser }) => {
   };
 
   const sections = [
-    { id: 'overview', label: 'Overview', icon: User },
+    { id: 'overview', label: 'Overview', icon: Eye },
     { id: 'saved', label: 'Saved', icon: Bookmark },
     { id: 'achievements', label: 'Achievements', icon: Award },
     { id: 'activity', label: 'Activity', icon: BookOpen },
