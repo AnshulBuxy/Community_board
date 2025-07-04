@@ -9,6 +9,7 @@ import DiscoverUsers from './components/DiscoverUsers';
 import MyConnections from './components/MyConnections';
 import MyRequests from './components/MyRequests';
 import OpportunitiesBoard from './components/OpportunitiesBoard';
+import MyProfile from './components/MyProfile';
 import { usePosts } from './hooks/usePosts';
 import { User } from './types';
 
@@ -79,6 +80,8 @@ const App: React.FC = () => {
         return <MyRequests currentUser={currentUser} />;
       case 'opportunities':
         return <OpportunitiesBoard currentUser={currentUser} />;
+      case 'profile':
+        return <MyProfile currentUser={currentUser} />;
       default:
         return (
           <>
