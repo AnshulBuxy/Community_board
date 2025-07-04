@@ -1,33 +1,26 @@
 import React from 'react';
 import { 
-  Home, 
+  LayoutDashboard, 
   Bot, 
-  BookOpen, 
   Search, 
   Users, 
-  Settings,
-  ChevronRight,
-  UserPlus,
-  MessageSquare,
-  Briefcase,
-  User
+  GraduationCap,
+  ChevronRight
 } from 'lucide-react';
 
 interface SidebarProps {
-  activeTab: string;
-  onTabChange: (tab: string) => void;
+  activeSection: string;
+  onSectionChange: (section: string) => void;
   className?: string;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange, className = '' }) => {
+const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSectionChange, className = '' }) => {
   const navItems = [
+    { icon: LayoutDashboard, label: 'Dashboard', key: 'dashboard' },
+    { icon: Bot, label: 'AI Agents', key: 'agents' },
+    { icon: Search, label: 'Discovery', key: 'discovery' },
     { icon: Users, label: 'Community', key: 'community' },
-    { icon: Search, label: 'Discover', key: 'discover' },
-    { icon: UserPlus, label: 'Connections', key: 'connections' },
-    { icon: MessageSquare, label: 'Requests', key: 'requests' },
-    { icon: Briefcase, label: 'Opportunities', key: 'opportunities' },
-    { icon: User, label: 'Profile', key: 'profile' },
-    { icon: Settings, label: 'Settings', key: 'settings' },
+    { icon: GraduationCap, label: 'Learning', key: 'learning' },
   ];
 
   return (
@@ -49,11 +42,11 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange, className = '
       <nav className="flex-1 p-4 space-y-2">
         {navItems.map((item, index) => {
           const Icon = item.icon;
-          const isActive = activeTab === item.key;
+          const isActive = activeSection === item.key;
           return (
             <button
               key={index}
-              onClick={() => onTabChange(item.key)}
+              onClick={() => onSectionChange(item.key)}
               className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 group ${
                 isActive
                   ? 'bg-blue-600 text-white shadow-lg'
