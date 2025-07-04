@@ -1,146 +1,166 @@
 import React, { useState } from 'react';
-import { Trophy, Calendar, Clock, Users, Play, Star, Award, Target, Zap, Code, Timer, Medal, Crown, TrendingUp, Eye, CheckCircle, AlertCircle, PlayCircle } from 'lucide-react';
+import { BookOpen, Trophy, Gamepad2, Play, Clock, Users, Star, Award, Calendar, Timer, CheckCircle, PlayCircle, Eye } from 'lucide-react';
 
 const LearningSection: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('contests');
-  const [contestFilter, setContestFilter] = useState<'all' | 'live' | 'upcoming' | 'past'>('all');
+  const [activeTab, setActiveTab] = useState('quizzes');
+  const [quizFilter, setQuizFilter] = useState<'all' | 'live' | 'upcoming' | 'past'>('all');
 
-  // Mock data for contests and events (like coding platforms)
-  const contests = [
+  // Mock data for quizzes with event organization
+  const quizzes = [
     {
       id: '1',
-      title: 'Weekly Coding Challenge #47',
+      title: 'React Fundamentals Quiz',
       type: 'live',
       startTime: new Date(),
-      endTime: new Date(Date.now() + 7200000), // 2 hours from now
-      duration: '2 hours',
-      participants: 1247,
-      maxParticipants: 2000,
+      endTime: new Date(Date.now() + 3600000), // 1 hour from now
+      duration: '30 minutes',
+      participants: 234,
+      maxParticipants: 500,
       difficulty: 'Medium',
-      problems: 4,
-      prize: '$500',
-      organizer: 'Sama Platform',
-      category: 'Algorithm',
-      description: 'Test your algorithmic skills with dynamic programming and graph theory problems.',
+      questions: 20,
+      category: 'React',
+      description: 'Test your knowledge of React hooks, components, and state management.',
       status: 'live',
       registered: true
     },
     {
       id: '2',
-      title: 'React Component Design Contest',
+      title: 'JavaScript ES6+ Challenge',
       type: 'upcoming',
       startTime: new Date(Date.now() + 86400000), // Tomorrow
-      endTime: new Date(Date.now() + 172800000), // Day after tomorrow
-      duration: '24 hours',
-      participants: 456,
-      maxParticipants: 1000,
+      endTime: new Date(Date.now() + 90000000), // Tomorrow + 1 hour
+      duration: '45 minutes',
+      participants: 156,
+      maxParticipants: 300,
       difficulty: 'Hard',
-      problems: 3,
-      prize: '$1000',
-      organizer: 'Frontend Masters',
-      category: 'Frontend',
-      description: 'Build innovative React components with modern design patterns and accessibility.',
+      questions: 25,
+      category: 'JavaScript',
+      description: 'Advanced JavaScript concepts including async/await, destructuring, and modules.',
       status: 'upcoming',
       registered: false
     },
     {
       id: '3',
-      title: 'Python Data Science Sprint',
+      title: 'Python Basics Quiz',
       type: 'upcoming',
-      startTime: new Date(Date.now() + 259200000), // 3 days from now
-      endTime: new Date(Date.now() + 345600000), // 4 days from now
-      duration: '3 hours',
-      participants: 789,
-      maxParticipants: 1500,
-      difficulty: 'Medium',
-      problems: 5,
-      prize: '$750',
-      organizer: 'DataCamp',
-      category: 'Data Science',
-      description: 'Solve real-world data analysis problems using pandas, numpy, and machine learning.',
+      startTime: new Date(Date.now() + 172800000), // 2 days from now
+      endTime: new Date(Date.now() + 176400000), // 2 days + 1 hour
+      duration: '25 minutes',
+      participants: 89,
+      maxParticipants: 200,
+      difficulty: 'Easy',
+      questions: 15,
+      category: 'Python',
+      description: 'Fundamental Python concepts for beginners.',
       status: 'upcoming',
       registered: true
     },
     {
       id: '4',
-      title: 'JavaScript Fundamentals Battle',
+      title: 'CSS Grid & Flexbox Mastery',
       type: 'past',
       startTime: new Date(Date.now() - 172800000), // 2 days ago
-      endTime: new Date(Date.now() - 86400000), // 1 day ago
-      duration: '1.5 hours',
-      participants: 2156,
-      maxParticipants: 2500,
-      difficulty: 'Easy',
-      problems: 6,
-      prize: '$300',
-      organizer: 'JS Academy',
-      category: 'JavaScript',
-      description: 'Master JavaScript basics through practical coding challenges.',
+      endTime: new Date(Date.now() - 169200000), // 2 days ago + 1 hour
+      duration: '40 minutes',
+      participants: 445,
+      maxParticipants: 500,
+      difficulty: 'Medium',
+      questions: 18,
+      category: 'CSS',
+      description: 'Master modern CSS layout techniques.',
       status: 'past',
       registered: true,
-      rank: 45,
-      score: 850
+      score: 85,
+      rank: 23
     },
     {
       id: '5',
-      title: 'Advanced TypeScript Challenge',
+      title: 'Node.js Backend Quiz',
       type: 'past',
       startTime: new Date(Date.now() - 604800000), // 1 week ago
-      endTime: new Date(Date.now() - 518400000), // 6 days ago
-      duration: '4 hours',
-      participants: 892,
-      maxParticipants: 1000,
+      endTime: new Date(Date.now() - 601200000), // 1 week ago + 1 hour
+      duration: '35 minutes',
+      participants: 312,
+      maxParticipants: 400,
       difficulty: 'Hard',
-      problems: 3,
-      prize: '$1200',
-      organizer: 'TypeScript Pro',
-      category: 'TypeScript',
-      description: 'Deep dive into advanced TypeScript features and complex type manipulations.',
+      questions: 22,
+      category: 'Node.js',
+      description: 'Server-side JavaScript with Express and databases.',
       status: 'past',
       registered: true,
-      rank: 12,
-      score: 1450
+      score: 92,
+      rank: 8
     }
   ];
 
-  const leaderboard = [
-    { rank: 1, name: 'Alex Chen', score: 2450, contests: 15, avatar: 'https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&w=150' },
-    { rank: 2, name: 'Sarah Kim', score: 2380, contests: 18, avatar: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150' },
-    { rank: 3, name: 'Mike Rodriguez', score: 2290, contests: 12, avatar: 'https://images.pexels.com/photos/1181424/pexels-photo-1181424.jpeg?auto=compress&cs=tinysrgb&w=150' },
-    { rank: 4, name: 'Emily Watson', score: 2180, contests: 20, avatar: 'https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=150' },
-    { rank: 5, name: 'David Park', score: 2050, contests: 14, avatar: 'https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&w=150' }
-  ];
-
-  const practiceProblems = [
+  // Mock data for games
+  const games = [
     {
       id: '1',
-      title: 'Two Sum',
+      title: 'Code Typing Race',
+      description: 'Improve your typing speed with code snippets',
       difficulty: 'Easy',
-      category: 'Array',
-      solved: true,
-      attempts: 3,
-      successRate: 85,
-      tags: ['Hash Table', 'Array']
+      players: 1247,
+      rating: 4.8,
+      category: 'Typing',
+      image: 'https://images.pexels.com/photos/1181424/pexels-photo-1181424.jpeg?auto=compress&cs=tinysrgb&w=300'
     },
     {
       id: '2',
-      title: 'Binary Tree Traversal',
+      title: 'Algorithm Puzzle',
+      description: 'Solve algorithmic challenges step by step',
       difficulty: 'Medium',
-      category: 'Tree',
-      solved: false,
-      attempts: 0,
-      successRate: 62,
-      tags: ['Tree', 'DFS', 'BFS']
+      players: 892,
+      rating: 4.6,
+      category: 'Logic',
+      image: 'https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=300'
     },
     {
       id: '3',
-      title: 'Dynamic Programming - Fibonacci',
-      difficulty: 'Medium',
-      category: 'DP',
-      solved: true,
-      attempts: 5,
-      successRate: 71,
-      tags: ['Dynamic Programming', 'Recursion']
+      title: 'Debug Detective',
+      description: 'Find and fix bugs in code snippets',
+      difficulty: 'Hard',
+      players: 634,
+      rating: 4.7,
+      category: 'Debugging',
+      image: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=300'
+    }
+  ];
+
+  // Mock data for learning resources
+  const resources = [
+    {
+      id: '1',
+      title: 'Complete React Course',
+      type: 'Course',
+      duration: '12 hours',
+      level: 'Beginner',
+      rating: 4.9,
+      students: 15420,
+      instructor: 'Sarah Johnson',
+      image: 'https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&w=300'
+    },
+    {
+      id: '2',
+      title: 'JavaScript Fundamentals',
+      type: 'Tutorial',
+      duration: '8 hours',
+      level: 'Beginner',
+      rating: 4.7,
+      students: 23150,
+      instructor: 'Mike Chen',
+      image: 'https://images.pexels.com/photos/1181424/pexels-photo-1181424.jpeg?auto=compress&cs=tinysrgb&w=300'
+    },
+    {
+      id: '3',
+      title: 'Advanced Python Programming',
+      type: 'Course',
+      duration: '20 hours',
+      level: 'Advanced',
+      rating: 4.8,
+      students: 8930,
+      instructor: 'Dr. Emily Watson',
+      image: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=300'
     }
   ];
 
@@ -186,23 +206,23 @@ const LearningSection: React.FC = () => {
     return startTime.toLocaleDateString();
   };
 
-  const filteredContests = contests.filter(contest => {
-    if (contestFilter === 'all') return true;
-    return contest.type === contestFilter;
+  const filteredQuizzes = quizzes.filter(quiz => {
+    if (quizFilter === 'all') return true;
+    return quiz.type === quizFilter;
   });
 
-  const renderContests = () => (
+  const renderQuizzes = () => (
     <div className="space-y-6">
-      {/* Contest Filter Tabs */}
+      {/* Quiz Filter Tabs */}
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900">Contests & Competitions</h2>
+        <h2 className="text-2xl font-bold text-gray-900">Interactive Quizzes</h2>
         <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
           {['all', 'live', 'upcoming', 'past'].map(filter => (
             <button
               key={filter}
-              onClick={() => setContestFilter(filter as any)}
+              onClick={() => setQuizFilter(filter as any)}
               className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                contestFilter === filter
+                quizFilter === filter
                   ? 'bg-white text-gray-900 shadow-sm'
                   : 'text-gray-600 hover:text-gray-900'
               }`}
@@ -213,106 +233,100 @@ const LearningSection: React.FC = () => {
         </div>
       </div>
 
-      {/* Contest Cards */}
-      <div className="space-y-4">
-        {filteredContests.map(contest => (
-          <div key={contest.id} className={`bg-white rounded-xl shadow-sm border-2 p-6 hover:shadow-md transition-all duration-200 ${
-            contest.type === 'live' ? 'border-red-200 bg-red-50' : 'border-gray-200'
+      {/* Quiz Cards */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {filteredQuizzes.map(quiz => (
+          <div key={quiz.id} className={`bg-white rounded-xl shadow-sm border-2 p-6 hover:shadow-md transition-all duration-200 ${
+            quiz.type === 'live' ? 'border-red-200 bg-red-50' : 'border-gray-200'
           }`}>
-            <div className="flex items-start justify-between">
+            <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
-                <div className="flex items-center gap-3 mb-3">
-                  <h3 className="text-xl font-bold text-gray-900">{contest.title}</h3>
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium border ${getStatusColor(contest.status)}`}>
-                    {contest.type === 'live' && <PlayCircle className="h-4 w-4 inline mr-1" />}
-                    {formatStartTime(contest.startTime, contest.type)}
-                  </span>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(contest.difficulty)}`}>
-                    {contest.difficulty}
+                <div className="flex items-center gap-2 mb-2">
+                  <h3 className="text-lg font-bold text-gray-900">{quiz.title}</h3>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(quiz.status)}`}>
+                    {quiz.type === 'live' && <PlayCircle className="h-3 w-3 inline mr-1" />}
+                    {formatStartTime(quiz.startTime, quiz.type)}
                   </span>
                 </div>
                 
-                <p className="text-gray-600 mb-4">{contest.description}</p>
+                <p className="text-gray-600 text-sm mb-3">{quiz.description}</p>
                 
-                <div className="grid grid-cols-2 md:grid-cols-6 gap-4 text-sm mb-4">
-                  <div className="flex items-center gap-2">
-                    <Clock className="h-4 w-4 text-gray-500" />
-                    <span className="text-gray-600">{contest.duration}</span>
+                <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
+                  <div className="flex items-center gap-1">
+                    <Clock className="h-4 w-4" />
+                    <span>{quiz.duration}</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Users className="h-4 w-4 text-gray-500" />
-                    <span className="text-gray-600">{contest.participants.toLocaleString()}</span>
+                  <div className="flex items-center gap-1">
+                    <Users className="h-4 w-4" />
+                    <span>{quiz.participants}</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Code className="h-4 w-4 text-gray-500" />
-                    <span className="text-gray-600">{contest.problems} problems</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Trophy className="h-4 w-4 text-gray-500" />
-                    <span className="text-gray-600">{contest.prize}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Target className="h-4 w-4 text-gray-500" />
-                    <span className="text-gray-600">{contest.category}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Award className="h-4 w-4 text-gray-500" />
-                    <span className="text-gray-600">{contest.organizer}</span>
+                  <div className="flex items-center gap-1">
+                    <BookOpen className="h-4 w-4" />
+                    <span>{quiz.questions} questions</span>
                   </div>
                 </div>
 
-                {/* Live Contest Timer */}
-                {contest.type === 'live' && (
+                <div className="flex items-center gap-2 mb-4">
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(quiz.difficulty)}`}>
+                    {quiz.difficulty}
+                  </span>
+                  <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
+                    {quiz.category}
+                  </span>
+                </div>
+
+                {/* Live Quiz Timer */}
+                {quiz.type === 'live' && (
                   <div className="bg-red-100 border border-red-200 rounded-lg p-3 mb-4">
                     <div className="flex items-center gap-2 text-red-800">
                       <Timer className="h-4 w-4" />
-                      <span className="font-medium">{formatTimeRemaining(contest.endTime)}</span>
+                      <span className="font-medium text-sm">{formatTimeRemaining(quiz.endTime)}</span>
                     </div>
                   </div>
                 )}
 
-                {/* Past Contest Results */}
-                {contest.type === 'past' && contest.rank && (
+                {/* Past Quiz Results */}
+                {quiz.type === 'past' && quiz.score && (
                   <div className="bg-gray-100 border border-gray-200 rounded-lg p-3 mb-4">
                     <div className="flex items-center gap-4 text-sm">
                       <div className="flex items-center gap-1">
-                        <Medal className="h-4 w-4 text-yellow-600" />
-                        <span className="font-medium">Rank: #{contest.rank}</span>
+                        <Trophy className="h-4 w-4 text-yellow-600" />
+                        <span className="font-medium">Rank: #{quiz.rank}</span>
                       </div>
                       <div className="flex items-center gap-1">
                         <Star className="h-4 w-4 text-blue-600" />
-                        <span className="font-medium">Score: {contest.score}</span>
+                        <span className="font-medium">Score: {quiz.score}%</span>
                       </div>
                     </div>
                   </div>
                 )}
               </div>
-              
-              <div className="ml-6 flex flex-col gap-2">
-                {contest.type === 'live' && (
-                  <button className="bg-red-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-red-600 transition-colors flex items-center gap-2">
-                    <PlayCircle className="h-5 w-5" />
-                    Join Contest
-                  </button>
-                )}
-                {contest.type === 'upcoming' && !contest.registered && (
-                  <button className="bg-blue-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-600 transition-colors">
-                    Register Now
-                  </button>
-                )}
-                {contest.type === 'upcoming' && contest.registered && (
-                  <button className="bg-green-500 text-white px-6 py-3 rounded-lg font-medium cursor-default flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5" />
-                    Registered
-                  </button>
-                )}
-                {contest.type === 'past' && (
-                  <button className="bg-gray-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-600 transition-colors flex items-center gap-2">
-                    <Eye className="h-5 w-5" />
-                    View Results
-                  </button>
-                )}
-              </div>
+            </div>
+            
+            <div className="flex gap-2">
+              {quiz.type === 'live' && (
+                <button className="flex-1 bg-red-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-red-600 transition-colors flex items-center justify-center gap-2">
+                  <PlayCircle className="h-4 w-4" />
+                  Join Quiz
+                </button>
+              )}
+              {quiz.type === 'upcoming' && !quiz.registered && (
+                <button className="flex-1 bg-blue-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-600 transition-colors">
+                  Register
+                </button>
+              )}
+              {quiz.type === 'upcoming' && quiz.registered && (
+                <button className="flex-1 bg-green-500 text-white px-4 py-2 rounded-lg font-medium cursor-default flex items-center justify-center gap-2">
+                  <CheckCircle className="h-4 w-4" />
+                  Registered
+                </button>
+              )}
+              {quiz.type === 'past' && (
+                <button className="flex-1 bg-gray-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-gray-600 transition-colors flex items-center justify-center gap-2">
+                  <Eye className="h-4 w-4" />
+                  View Results
+                </button>
+              )}
             </div>
           </div>
         ))}
@@ -320,177 +334,118 @@ const LearningSection: React.FC = () => {
     </div>
   );
 
-  const renderLeaderboard = () => (
+  const renderGames = () => (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-gray-900">Global Leaderboard</h2>
-      
-      {/* Current User Stats */}
-      <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl p-6 text-white">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-lg font-semibold mb-2">Your Ranking</h3>
-            <div className="flex items-center gap-6">
-              <div>
-                <p className="text-blue-100 text-sm">Current Rank</p>
-                <p className="text-2xl font-bold">#127</p>
+      <h2 className="text-2xl font-bold text-gray-900">Learning Games</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {games.map(game => (
+          <div key={game.id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
+            <img
+              src={game.image}
+              alt={game.title}
+              className="w-full h-48 object-cover"
+            />
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-lg font-bold text-gray-900">{game.title}</h3>
+                <span className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(game.difficulty)}`}>
+                  {game.difficulty}
+                </span>
               </div>
-              <div>
-                <p className="text-blue-100 text-sm">Total Score</p>
-                <p className="text-2xl font-bold">1,850</p>
+              
+              <p className="text-gray-600 text-sm mb-4">{game.description}</p>
+              
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-4 text-sm text-gray-600">
+                  <div className="flex items-center gap-1">
+                    <Users className="h-4 w-4" />
+                    <span>{game.players.toLocaleString()}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Star className="h-4 w-4 text-yellow-500" />
+                    <span>{game.rating}</span>
+                  </div>
+                </div>
+                <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-medium">
+                  {game.category}
+                </span>
               </div>
-              <div>
-                <p className="text-blue-100 text-sm">Contests</p>
-                <p className="text-2xl font-bold">8</p>
-              </div>
+              
+              <button className="w-full bg-purple-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-purple-600 transition-colors flex items-center justify-center gap-2">
+                <Play className="h-4 w-4" />
+                Play Game
+              </button>
             </div>
           </div>
-          <Crown className="h-16 w-16 text-yellow-300" />
-        </div>
-      </div>
-
-      {/* Top Performers */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Performers</h3>
-        <div className="space-y-3">
-          {leaderboard.map(user => (
-            <div key={user.rank} className={`flex items-center gap-4 p-4 rounded-lg ${
-              user.rank <= 3 ? 'bg-yellow-50 border border-yellow-200' : 'bg-gray-50'
-            }`}>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${
-                user.rank === 1 ? 'bg-yellow-500 text-white' :
-                user.rank === 2 ? 'bg-gray-400 text-white' :
-                user.rank === 3 ? 'bg-orange-500 text-white' :
-                'bg-gray-200 text-gray-700'
-              }`}>
-                {user.rank}
-              </div>
-              
-              <img
-                src={user.avatar}
-                alt={user.name}
-                className="w-10 h-10 rounded-full object-cover"
-              />
-              
-              <div className="flex-1">
-                <p className="font-semibold text-gray-900">{user.name}</p>
-                <p className="text-sm text-gray-600">{user.contests} contests</p>
-              </div>
-              
-              <div className="text-right">
-                <p className="font-bold text-gray-900">{user.score.toLocaleString()}</p>
-                <p className="text-sm text-gray-600">points</p>
-              </div>
-              
-              {user.rank <= 3 && (
-                <Crown className={`h-5 w-5 ${
-                  user.rank === 1 ? 'text-yellow-500' :
-                  user.rank === 2 ? 'text-gray-400' :
-                  'text-orange-500'
-                }`} />
-              )}
-            </div>
-          ))}
-        </div>
+        ))}
       </div>
     </div>
   );
 
-  const renderPractice = () => (
+  const renderResources = () => (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900">Practice Problems</h2>
-        <div className="flex gap-2">
-          <select className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-            <option>All Difficulties</option>
-            <option>Easy</option>
-            <option>Medium</option>
-            <option>Hard</option>
-          </select>
-          <select className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-            <option>All Categories</option>
-            <option>Array</option>
-            <option>Tree</option>
-            <option>Dynamic Programming</option>
-            <option>Graph</option>
-          </select>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-        <div className="p-6 border-b border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-900">Problem Set</h3>
-        </div>
-        
-        <div className="divide-y divide-gray-200">
-          {practiceProblems.map(problem => (
-            <div key={problem.id} className="p-6 hover:bg-gray-50 transition-colors">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
-                    problem.solved ? 'bg-green-500' : 'bg-gray-300'
-                  }`}>
-                    {problem.solved ? (
-                      <CheckCircle className="h-4 w-4 text-white" />
-                    ) : (
-                      <AlertCircle className="h-4 w-4 text-gray-600" />
-                    )}
+      <h2 className="text-2xl font-bold text-gray-900">Learning Resources</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {resources.map(resource => (
+          <div key={resource.id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
+            <img
+              src={resource.image}
+              alt={resource.title}
+              className="w-full h-48 object-cover"
+            />
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-2">
+                <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+                  {resource.type}
+                </span>
+                <span className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(resource.level)}`}>
+                  {resource.level}
+                </span>
+              </div>
+              
+              <h3 className="text-lg font-bold text-gray-900 mb-2">{resource.title}</h3>
+              <p className="text-gray-600 text-sm mb-3">By {resource.instructor}</p>
+              
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-4 text-sm text-gray-600">
+                  <div className="flex items-center gap-1">
+                    <Clock className="h-4 w-4" />
+                    <span>{resource.duration}</span>
                   </div>
-                  
-                  <div>
-                    <h4 className="font-semibold text-gray-900">{problem.title}</h4>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(problem.difficulty)}`}>
-                        {problem.difficulty}
-                      </span>
-                      <span className="text-sm text-gray-600">{problem.category}</span>
-                      <span className="text-sm text-gray-600">• {problem.successRate}% success rate</span>
-                    </div>
+                  <div className="flex items-center gap-1">
+                    <Users className="h-4 w-4" />
+                    <span>{resource.students.toLocaleString()}</span>
                   </div>
                 </div>
-                
-                <div className="flex items-center gap-4">
-                  <div className="text-right text-sm text-gray-600">
-                    {problem.attempts > 0 && (
-                      <p>{problem.attempts} attempts</p>
-                    )}
-                  </div>
-                  
-                  <button className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                    problem.solved 
-                      ? 'bg-green-100 text-green-700 hover:bg-green-200' 
-                      : 'bg-blue-500 text-white hover:bg-blue-600'
-                  }`}>
-                    {problem.solved ? 'Solve Again' : 'Solve'}
-                  </button>
+                <div className="flex items-center gap-1">
+                  <Star className="h-4 w-4 text-yellow-500" />
+                  <span className="text-sm font-medium">{resource.rating}</span>
                 </div>
               </div>
               
-              <div className="flex flex-wrap gap-1 mt-3">
-                {problem.tags.map(tag => (
-                  <span key={tag} className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md">
-                    {tag}
-                  </span>
-                ))}
-              </div>
+              <button className="w-full bg-blue-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-600 transition-colors flex items-center justify-center gap-2">
+                <BookOpen className="h-4 w-4" />
+                Start Learning
+              </button>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </div>
   );
 
   const tabs = [
-    { id: 'contests', label: 'Contests', icon: Trophy },
-    { id: 'leaderboard', label: 'Leaderboard', icon: Crown },
-    { id: 'practice', label: 'Practice', icon: Code }
+    { id: 'quizzes', label: 'Quizzes', icon: Trophy },
+    { id: 'games', label: 'Games', icon: Gamepad2 },
+    { id: 'resources', label: 'Resources', icon: BookOpen }
   ];
 
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Coding Arena</h1>
-        <p className="text-gray-600">Compete, practice, and improve your coding skills through contests and challenges.</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Learning Hub</h1>
+        <p className="text-gray-600">Enhance your skills through interactive quizzes, engaging games, and comprehensive learning resources.</p>
       </div>
 
       {/* Tab Navigation */}
@@ -517,9 +472,9 @@ const LearningSection: React.FC = () => {
       </div>
 
       {/* Tab Content */}
-      {activeTab === 'contests' && renderContests()}
-      {activeTab === 'leaderboard' && renderLeaderboard()}
-      {activeTab === 'practice' && renderPractice()}
+      {activeTab === 'quizzes' && renderQuizzes()}
+      {activeTab === 'games' && renderGames()}
+      {activeTab === 'resources' && renderResources()}
     </div>
   );
 };
