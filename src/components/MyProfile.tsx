@@ -26,7 +26,10 @@ import {
   Heart,
   Building,
   DollarSign,
-  Clock
+  Clock,
+  Share2,
+  MoreHorizontal,
+  ExternalLink
 } from 'lucide-react';
 import { User as UserType } from '../types';
 
@@ -72,30 +75,42 @@ const MyProfile: React.FC<MyProfileProps> = ({ currentUser }) => {
       id: '1',
       type: 'post',
       author: {
+        id: '3',
         name: 'Maria Rodriguez',
         username: 'maria_dev',
         avatar: 'https://images.pexels.com/photos/1181424/pexels-photo-1181424.jpeg?auto=compress&cs=tinysrgb&w=150',
-        role: 'mentor'
+        role: 'mentor',
+        isOnline: true
       },
-      content: 'Excited to share my latest tutorial on advanced TypeScript patterns! Check it out and let me know what you think.',
+      content: 'Excited to share my latest tutorial on advanced TypeScript patterns! Check it out and let me know what you think. Happy to help anyone with questions! 🚀',
       timestamp: new Date(Date.now() - 7200000),
       likes: 28,
       comments: 7,
+      shares: 5,
+      isLiked: true,
+      isSaved: true,
+      mentions: [],
       savedDate: new Date(Date.now() - 3600000)
     },
     {
       id: '2',
       type: 'post',
       author: {
+        id: '4',
         name: 'Alex Thompson',
         username: 'alex_mentor',
         avatar: 'https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=150',
-        role: 'mentor'
+        role: 'mentor',
+        isOnline: true
       },
       content: 'Working on a new Python data science course. Would love feedback from the community on what topics you\'d like to see covered!',
       timestamp: new Date(Date.now() - 14400000),
       likes: 22,
       comments: 15,
+      shares: 3,
+      isLiked: false,
+      isSaved: true,
+      mentions: [],
       savedDate: new Date(Date.now() - 86400000)
     }
   ]);
@@ -109,11 +124,26 @@ const MyProfile: React.FC<MyProfileProps> = ({ currentUser }) => {
       companyLogo: 'https://images.pexels.com/photos/1181424/pexels-photo-1181424.jpeg?auto=compress&cs=tinysrgb&w=100',
       jobType: 'internship',
       workType: 'hybrid',
+      field: 'tech',
       location: 'New York, NY',
       salary: '$25/hour',
-      description: 'Join our data science team as an intern and work on real-world machine learning projects.',
+      description: 'Join our data science team as an intern and work on real-world machine learning projects. Perfect opportunity for students looking to gain hands-on experience.',
+      requirements: ['Python programming', 'Statistics knowledge', 'Currently enrolled in university'],
       skills: ['python', 'data-science'],
+      postedDate: new Date(Date.now() - 172800000),
+      deadline: new Date(Date.now() + 1296000000),
       applicants: 23,
+      isSaved: true,
+      poster: {
+        id: 'hr2',
+        name: 'Mike Chen',
+        username: 'mikechen',
+        avatar: 'https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=150',
+        role: 'mentor',
+        isOnline: false,
+        rating: 4.6,
+        availability: 'busy'
+      },
       savedDate: new Date(Date.now() - 172800000)
     },
     {
@@ -124,11 +154,26 @@ const MyProfile: React.FC<MyProfileProps> = ({ currentUser }) => {
       companyLogo: 'https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=100',
       jobType: 'full-time',
       workType: 'onsite',
+      field: 'tech',
       location: 'Austin, TX',
       salary: '$70k - $90k',
-      description: 'Great opportunity for a junior developer to grow their skills in a supportive environment.',
+      description: 'Great opportunity for a junior developer to grow their skills in a supportive environment. You\'ll work on both frontend and backend technologies.',
+      requirements: ['1-2 years experience', 'JavaScript proficiency', 'Eagerness to learn'],
       skills: ['javascript', 'nodejs', 'react'],
+      postedDate: new Date(Date.now() - 345600000),
+      deadline: new Date(Date.now() + 2160000000),
       applicants: 89,
+      isSaved: true,
+      poster: {
+        id: 'hr4',
+        name: 'Alex Rodriguez',
+        username: 'alexrodriguez',
+        avatar: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150',
+        role: 'mentor',
+        isOnline: true,
+        rating: 4.5,
+        availability: 'available'
+      },
       savedDate: new Date(Date.now() - 259200000)
     }
   ]);
@@ -225,6 +270,22 @@ const MyProfile: React.FC<MyProfileProps> = ({ currentUser }) => {
       case 'hybrid': return 'bg-purple-100 text-purple-800';
       default: return 'bg-gray-100 text-gray-800';
     }
+  };
+
+  const renderContentWithMentions = (content: string) => {
+    const mentionRegex = /@(\w+)/g;
+    const parts = content.split(mentionRegex);
+    
+    return parts.map((part, index) => {
+      if (index % 2 === 1) {
+        return (
+          <span key={index} className="text-blue-600 font-medium hover:underline cursor-pointer">
+            @{part}
+          </span>
+        );
+      }
+      return part;
+    });
   };
 
   const sections = [
@@ -614,114 +675,153 @@ const MyProfile: React.FC<MyProfileProps> = ({ currentUser }) => {
         ) : (
           <div className="space-y-4">
             {filteredSaved.map((item) => (
-              <div key={`${item.type}-${item.id}`} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
+              <div key={`${item.type}-${item.id}`}>
                 {item.type === 'post' ? (
-                  // Saved Post
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
+                  // Saved Post - Same design as PostCard
+                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
+                    <div className="flex items-start gap-4">
+                      <div className="relative">
                         <img
                           src={item.author.avatar}
                           alt={item.author.name}
-                          className="w-10 h-10 rounded-full object-cover"
+                          className="w-12 h-12 rounded-full object-cover"
                         />
-                        <div>
-                          <h3 className="font-semibold text-gray-900">{item.author.name}</h3>
+                        {item.author.isOnline && (
+                          <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+                        )}
+                      </div>
+                      
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
-                            <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                            <h3 className="font-semibold text-gray-900">{item.author.name}</h3>
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                               item.author.role === 'mentor' 
                                 ? 'bg-purple-100 text-purple-800' 
                                 : 'bg-blue-100 text-blue-800'
                             }`}>
                               {item.author.role}
                             </span>
-                            <span className="text-xs text-gray-500">
-                              Saved {formatTimeAgo(item.savedDate)}
-                            </span>
+                            <span className="text-gray-500 text-sm">{formatTimeAgo(item.timestamp)}</span>
                           </div>
+                          <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors duration-200">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </button>
+                        </div>
+                        
+                        <p className="text-gray-700 mb-4 leading-relaxed">
+                          {renderContentWithMentions(item.content)}
+                        </p>
+                        
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-6">
+                            <button className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 ${
+                              item.isLiked
+                                ? 'bg-red-50 text-red-600 hover:bg-red-100'
+                                : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                            }`}>
+                              <Heart className={`h-4 w-4 ${item.isLiked ? 'fill-current' : ''}`} />
+                              <span className="text-sm font-medium">{item.likes} Likes</span>
+                            </button>
+                            
+                            <button className="flex items-center gap-2 px-3 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700 rounded-lg transition-all duration-200">
+                              <MessageCircle className="h-4 w-4" />
+                              <span className="text-sm font-medium">{item.comments} Comments</span>
+                            </button>
+                            
+                            <button className="flex items-center gap-2 px-3 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700 rounded-lg transition-all duration-200">
+                              <Share2 className="h-4 w-4" />
+                              <span className="text-sm font-medium">{item.shares} Shares</span>
+                            </button>
+                          </div>
+                          
+                          <button className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 bg-yellow-50 text-yellow-700 hover:bg-yellow-100">
+                            <BookmarkCheck className="h-4 w-4 fill-current" />
+                            <span className="text-sm font-medium">Saved</span>
+                          </button>
                         </div>
                       </div>
-                      <button className="p-2 text-yellow-600 hover:bg-yellow-50 rounded-lg transition-colors duration-200">
-                        <BookmarkCheck className="h-5 w-5 fill-current" />
-                      </button>
-                    </div>
-                    
-                    <p className="text-gray-700 line-clamp-3">{item.content}</p>
-                    
-                    <div className="flex items-center gap-4 text-sm text-gray-500">
-                      <div className="flex items-center gap-1">
-                        <Heart className="h-4 w-4" />
-                        <span>{item.likes} likes</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <MessageCircle className="h-4 w-4" />
-                        <span>{item.comments} comments</span>
-                      </div>
-                      <span>Posted {formatTimeAgo(item.timestamp)}</span>
                     </div>
                   </div>
                 ) : (
-                  // Saved Job
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
+                  // Saved Job - Same design as OpportunitiesBoard
+                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
+                    {/* Header */}
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center gap-4 flex-1">
                         <img
                           src={item.companyLogo}
                           alt={item.company}
                           className="w-12 h-12 rounded-lg object-cover border border-gray-200"
                         />
-                        <div>
-                          <h3 className="font-semibold text-gray-900 text-lg">{item.title}</h3>
-                          <p className="text-gray-700 font-medium">{item.company}</p>
-                          <div className="flex items-center gap-2 mt-1">
+                        <div className="flex-1">
+                          <h3 className="text-lg font-semibold text-gray-900 mb-1">{item.title}</h3>
+                          <p className="text-gray-700 font-medium mb-2">{item.company}</p>
+                          <div className="flex items-center gap-2 flex-wrap">
                             <span className={`px-2 py-1 rounded-full text-xs font-medium ${getJobTypeColor(item.jobType)}`}>
                               {item.jobType.replace('-', ' ')}
                             </span>
                             <span className={`px-2 py-1 rounded-full text-xs font-medium ${getWorkTypeColor(item.workType)}`}>
                               {item.workType}
                             </span>
-                            <span className="text-xs text-gray-500">
-                              Saved {formatTimeAgo(item.savedDate)}
-                            </span>
+                            <div className="flex items-center gap-1 text-gray-600 text-sm">
+                              <MapPin className="h-3 w-3" />
+                              <span>{item.location}</span>
+                            </div>
+                            {item.salary && (
+                              <div className="flex items-center gap-1 text-gray-600 text-sm">
+                                <DollarSign className="h-3 w-3" />
+                                <span>{item.salary}</span>
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
-                      <button className="p-2 text-yellow-600 hover:bg-yellow-50 rounded-lg transition-colors duration-200">
+                      
+                      <button className="p-2 rounded-lg transition-colors duration-200 bg-yellow-100 text-yellow-700 hover:bg-yellow-200">
                         <BookmarkCheck className="h-5 w-5 fill-current" />
                       </button>
                     </div>
-                    
-                    <p className="text-gray-700 line-clamp-2">{item.description}</p>
-                    
-                    <div className="flex items-center gap-4 text-sm text-gray-600">
-                      <div className="flex items-center gap-1">
-                        <MapPin className="h-4 w-4" />
-                        <span>{item.location}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <DollarSign className="h-4 w-4" />
-                        <span>{item.salary}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Users className="h-4 w-4" />
-                        <span>{item.applicants} applicants</span>
+
+                    {/* Description */}
+                    <p className="text-gray-700 mb-4 line-clamp-2">{item.description}</p>
+
+                    {/* Skills */}
+                    <div className="mb-4">
+                      <div className="flex flex-wrap gap-2">
+                        {item.skills.slice(0, 3).map((skill) => (
+                          <span
+                            key={skill}
+                            className="px-2 py-1 bg-blue-100 text-blue-800 text-sm rounded-md font-medium"
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                        {item.skills.length > 3 && (
+                          <span className="px-2 py-1 bg-gray-100 text-gray-700 text-sm rounded-md font-medium">
+                            +{item.skills.length - 3} more
+                          </span>
+                        )}
                       </div>
                     </div>
-                    
-                    <div className="flex flex-wrap gap-2">
-                      {item.skills.slice(0, 3).map((skill) => (
-                        <span
-                          key={skill}
-                          className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-md font-medium"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                      {item.skills.length > 3 && (
-                        <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md font-medium">
-                          +{item.skills.length - 3} more
-                        </span>
-                      )}
+
+                    {/* Footer */}
+                    <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                      <div className="flex items-center gap-4 text-sm text-gray-500">
+                        <div className="flex items-center gap-1">
+                          <Clock className="h-4 w-4" />
+                          <span>Posted {formatTimeAgo(item.postedDate)}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Users className="h-4 w-4" />
+                          <span>{item.applicants} applicants</span>
+                        </div>
+                      </div>
+                      
+                      <button className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition-colors duration-200">
+                        <ExternalLink className="h-4 w-4" />
+                        Apply Now
+                      </button>
                     </div>
                   </div>
                 )}
