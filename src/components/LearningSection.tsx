@@ -1,25 +1,5 @@
 import React, { useState } from 'react';
-import { 
-  BookOpen, 
-  Trophy, 
-  Gamepad2, 
-  Calendar, 
-  Clock, 
-  Users, 
-  Play, 
-  CheckCircle, 
-  Star,
-  Award,
-  Target,
-  Zap,
-  Brain,
-  Video,
-  FileText,
-  ExternalLink,
-  MapPin,
-  Live,
-  History
-} from 'lucide-react';
+import { BookOpen, Trophy, Gamepad2, Calendar, Clock, Users, Play, CheckCircle, Star, Award, Target, Zap, Brain, Video, FileText, ExternalLink, MapPin, Archive as Live, History } from 'lucide-react';
 
 const LearningSection: React.FC = () => {
   const [activeTab, setActiveTab] = useState('overview');
