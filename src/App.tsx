@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import CommunitySection from './components/CommunitySection';
 import DashboardSection from './components/DashboardSection';
+import LearningSection from './components/LearningSection';
 import PlaceholderSection from './components/PlaceholderSection';
 import { User } from './types';
 
@@ -26,6 +27,8 @@ const App: React.FC = () => {
         return <DashboardSection />;
       case 'community':
         return <CommunitySection currentUser={currentUser} />;
+      case 'learning':
+        return <LearningSection />;
       case 'ai-agents':
       case 'prompt-library':
       case 'discovery':

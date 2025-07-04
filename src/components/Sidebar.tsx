@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Bot, BookOpen, Search, Users, Settings } from 'lucide-react';
+import { Home, Bot, BookOpen, Search, Users, Settings, GraduationCap } from 'lucide-react';
 
 interface SidebarProps {
   activeSection: string;
@@ -13,6 +13,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSectionChange }) => 
     { id: 'prompt-library', label: 'Prompt Library', icon: BookOpen },
     { id: 'discovery', label: 'Discovery', icon: Search },
     { id: 'community', label: 'Community', icon: Users },
+    { id: 'learning', label: 'Learning', icon: GraduationCap },
     { id: 'settings', label: 'Settings', icon: Settings }
   ];
 
