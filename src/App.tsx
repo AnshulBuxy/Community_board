@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import CommunitySection from './components/CommunitySection';
 import DashboardSection from './components/DashboardSection';
 import LearningSection from './components/LearningSection';
 import PlaceholderSection from './components/PlaceholderSection';
+import MyProfile from './components/MyProfile';
 import { User } from './types';
 
 const App: React.FC = () => {
@@ -29,6 +31,8 @@ const App: React.FC = () => {
         return <CommunitySection currentUser={currentUser} />;
       case 'learning':
         return <LearningSection />;
+      case 'profile':
+        return <MyProfile currentUser={currentUser} />;
       case 'ai-agents':
       case 'prompt-library':
       case 'discovery':
@@ -44,9 +48,15 @@ const App: React.FC = () => {
       {/* Sidebar */}
       <Sidebar activeSection={activeSection} onSectionChange={setActiveSection} />
       
-      {/* Main Content */}
-      <div className="flex-1 overflow-auto">
-        {renderMainContent()}
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Header */}
+        <Header activeSection={activeSection} onSectionChange={setActiveSection} />
+        
+        {/* Main Content */}
+        <div className="flex-1 overflow-auto">
+          {renderMainContent()}
+        </div>
       </div>
     </div>
   );

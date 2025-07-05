@@ -9,7 +9,6 @@ import DiscoverUsers from './DiscoverUsers';
 import MyConnections from './MyConnections';
 import MyRequests from './MyRequests';
 import OpportunitiesBoard from './OpportunitiesBoard';
-import MyProfile from './MyProfile';
 import { usePosts } from '../hooks/usePosts';
 import { User } from '../types';
 
@@ -72,8 +71,6 @@ const CommunitySection: React.FC<CommunitySectionProps> = ({ currentUser }) => {
         return <MyRequests currentUser={currentUser} />;
       case 'opportunities':
         return <OpportunitiesBoard currentUser={currentUser} />;
-      case 'profile':
-        return <MyProfile currentUser={currentUser} />;
       default:
         return (
           <>
