@@ -233,96 +233,97 @@ const LearningSection: React.FC = () => {
         </div>
       </div>
 
-      {/* Quiz Cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Quiz Cards - More Concise */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
         {filteredQuizzes.map(quiz => (
-          <div key={quiz.id} className={`bg-white rounded-xl shadow-sm border-2 p-6 hover:shadow-md transition-all duration-200 ${
+          <div key={quiz.id} className={`bg-white rounded-lg shadow-sm border-2 p-4 hover:shadow-md transition-all duration-200 ${
             quiz.type === 'live' ? 'border-red-200 bg-red-50' : 'border-gray-200'
           }`}>
-            <div className="flex items-start justify-between mb-4">
-              <div className="flex-1">
+            {/* Header - Compact */}
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex-1 min-w-0">
+                <h3 className="text-base font-bold text-gray-900 mb-1 line-clamp-1">{quiz.title}</h3>
                 <div className="flex items-center gap-2 mb-2">
-                  <h3 className="text-lg font-bold text-gray-900">{quiz.title}</h3>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(quiz.status)}`}>
+                  <span className={`px-2 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(quiz.status)}`}>
                     {quiz.type === 'live' && <PlayCircle className="h-3 w-3 inline mr-1" />}
                     {formatStartTime(quiz.startTime, quiz.type)}
                   </span>
-                </div>
-                
-                <p className="text-gray-600 text-sm mb-3">{quiz.description}</p>
-                
-                <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
-                  <div className="flex items-center gap-1">
-                    <Clock className="h-4 w-4" />
-                    <span>{quiz.duration}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Users className="h-4 w-4" />
-                    <span>{quiz.participants}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <BookOpen className="h-4 w-4" />
-                    <span>{quiz.questions} questions</span>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2 mb-4">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(quiz.difficulty)}`}>
+                  <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${getDifficultyColor(quiz.difficulty)}`}>
                     {quiz.difficulty}
                   </span>
-                  <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
+                  <span className="px-2 py-0.5 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
                     {quiz.category}
                   </span>
                 </div>
-
-                {/* Live Quiz Timer */}
-                {quiz.type === 'live' && (
-                  <div className="bg-red-100 border border-red-200 rounded-lg p-3 mb-4">
-                    <div className="flex items-center gap-2 text-red-800">
-                      <Timer className="h-4 w-4" />
-                      <span className="font-medium text-sm">{formatTimeRemaining(quiz.endTime)}</span>
-                    </div>
-                  </div>
-                )}
-
-                {/* Past Quiz Results */}
-                {quiz.type === 'past' && quiz.score && (
-                  <div className="bg-gray-100 border border-gray-200 rounded-lg p-3 mb-4">
-                    <div className="flex items-center gap-4 text-sm">
-                      <div className="flex items-center gap-1">
-                        <Trophy className="h-4 w-4 text-yellow-600" />
-                        <span className="font-medium">Rank: #{quiz.rank}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Star className="h-4 w-4 text-blue-600" />
-                        <span className="font-medium">Score: {quiz.score}%</span>
-                      </div>
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
             
-            <div className="flex gap-2">
+            {/* Description - Shortened */}
+            <p className="text-gray-600 text-sm mb-3 line-clamp-2">{quiz.description}</p>
+            
+            {/* Stats - Compact */}
+            <div className="flex items-center gap-3 text-xs text-gray-600 mb-3">
+              <div className="flex items-center gap-1">
+                <Clock className="h-3 w-3" />
+                <span>{quiz.duration}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Users className="h-3 w-3" />
+                <span>{quiz.participants}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <BookOpen className="h-3 w-3" />
+                <span>{quiz.questions}Q</span>
+              </div>
+            </div>
+
+            {/* Live Quiz Timer - Compact */}
+            {quiz.type === 'live' && (
+              <div className="bg-red-100 border border-red-200 rounded-md p-2 mb-3">
+                <div className="flex items-center gap-2 text-red-800">
+                  <Timer className="h-3 w-3" />
+                  <span className="font-medium text-xs">{formatTimeRemaining(quiz.endTime)}</span>
+                </div>
+              </div>
+            )}
+
+            {/* Past Quiz Results - Compact */}
+            {quiz.type === 'past' && quiz.score && (
+              <div className="bg-gray-100 border border-gray-200 rounded-md p-2 mb-3">
+                <div className="flex items-center gap-3 text-xs">
+                  <div className="flex items-center gap-1">
+                    <Trophy className="h-3 w-3 text-yellow-600" />
+                    <span className="font-medium">#{quiz.rank}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Star className="h-3 w-3 text-blue-600" />
+                    <span className="font-medium">{quiz.score}%</span>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {/* Action Button - Compact */}
+            <div className="mt-3">
               {quiz.type === 'live' && (
-                <button className="flex-1 bg-red-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-red-600 transition-colors flex items-center justify-center gap-2">
+                <button className="w-full bg-red-500 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-red-600 transition-colors flex items-center justify-center gap-2">
                   <PlayCircle className="h-4 w-4" />
                   Join Quiz
                 </button>
               )}
               {quiz.type === 'upcoming' && !quiz.registered && (
-                <button className="flex-1 bg-blue-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-600 transition-colors">
+                <button className="w-full bg-blue-500 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-600 transition-colors">
                   Register
                 </button>
               )}
               {quiz.type === 'upcoming' && quiz.registered && (
-                <button className="flex-1 bg-green-500 text-white px-4 py-2 rounded-lg font-medium cursor-default flex items-center justify-center gap-2">
+                <button className="w-full bg-green-500 text-white px-3 py-2 rounded-md text-sm font-medium cursor-default flex items-center justify-center gap-2">
                   <CheckCircle className="h-4 w-4" />
                   Registered
                 </button>
               )}
               {quiz.type === 'past' && (
-                <button className="flex-1 bg-gray-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-gray-600 transition-colors flex items-center justify-center gap-2">
+                <button className="w-full bg-gray-500 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-600 transition-colors flex items-center justify-center gap-2">
                   <Eye className="h-4 w-4" />
                   View Results
                 </button>
