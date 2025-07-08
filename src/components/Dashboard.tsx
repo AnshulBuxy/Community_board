@@ -10,8 +10,18 @@ import MyProfile from './MyProfile';
 import { User } from '../types';
 
 const Dashboard: React.FC = () => {
-  const [userType, setUserType] = useState<'admin' | 'user'>('user');
-  const [activeSection, setActiveSection] = useState('community');
+  // Determine user type based on URL or localStorage
+  const [userType, setUserType] = useState<'admin' | 'user'>(() => {
+    // Check if we came from admin login
+    const isAdmin = localStorage.getItem('loginType') === 'admin';
+    return isAdmin ? 'admin' : 'user';
+  });
+  
+  const [activeSection, setActiveSection] = useState(() => {
+    // Set default section based on user type
+    const isAdmin = localStorage.getItem('loginType') === 'admin';
+    return isAdmin ? 'admin-dashboard' : 'community';
+  });
 
   const currentUser: User = {
     id: 'current-user',

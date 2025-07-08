@@ -31,13 +31,15 @@ const AuthPage: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // For now, bypass authentication and redirect to dashboard
+    // Store login type for dashboard routing
+    localStorage.setItem('loginType', isAdmin ? 'admin' : 'user');
     navigate('/dashboard');
   };
 
   const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
-    // For now, bypass signup and redirect to dashboard
+    // Store login type for dashboard routing (signup defaults to user)
+    localStorage.setItem('loginType', 'user');
     navigate('/dashboard');
   };
 
@@ -105,7 +107,10 @@ const AuthPage: React.FC = () => {
             {/* Bypass Button */}
             <div className="pt-4 border-t border-gray-200">
               <button
-                onClick={() => navigate('/dashboard')}
+                onClick={() => {
+                  localStorage.setItem('loginType', 'user');
+                  navigate('/dashboard');
+                }}
                 className="w-full px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-xl transition-all duration-200 text-sm font-medium"
               >
                 Skip for now (Demo Mode)
@@ -227,7 +232,7 @@ const AuthPage: React.FC = () => {
               {/* Bypass Button */}
               <button
                 type="button"
-                onClick={() => navigate('/dashboard')}
+                onClick={() => navigate(isAdmin ? '/dashboard' : '/dashboard')}
                 className="w-full px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-xl transition-all duration-200 text-sm font-medium border border-gray-200"
               >
                 Skip Authentication (Demo)
@@ -427,7 +432,13 @@ const AuthPage: React.FC = () => {
               {/* Bypass Button */}
               <button
                 type="button"
-                onClick={() => navigate('/dashboard')}
+                onClick={() => {
+                  localStorage.setItem('loginType', isAdmin ? 'admin' : 'user');
+                  navigate('/dashboard');
+                onClick={() => {
+                  localStorage.setItem('loginType', 'user');
+                  navigate('/dashboard');
+                }}
                 className="w-full px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-xl transition-all duration-200 text-sm font-medium border border-gray-200"
               >
                 Skip Registration (Demo)
