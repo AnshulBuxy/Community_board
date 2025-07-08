@@ -4,6 +4,7 @@ import Sidebar from './Sidebar';
 import CommunitySection from './CommunitySection';
 import DashboardSection from './DashboardSection';
 import LearningSection from './LearningSection';
+import AdminDashboard from './AdminDashboard';
 import PlaceholderSection from './PlaceholderSection';
 import MyProfile from './MyProfile';
 import { User } from '../types';
@@ -31,17 +32,19 @@ const Dashboard: React.FC = () => {
 
   const renderMainContent = () => {
     switch (activeSection) {
-      case 'dashboard':
+      case 'dashboard': // Keep for backward compatibility
         return <DashboardSection />;
+      case 'admin-dashboard':
+        return <AdminDashboard />;
       case 'community':
         return <CommunitySection currentUser={currentUser} />;
       case 'learning':
         return <LearningSection />;
       case 'profile':
         return <MyProfile currentUser={currentUser} />;
-      case 'ai-agents':
-      case 'prompt-library':
-      case 'discovery':
+      // case 'ai-agents':
+      // case 'prompt-library':
+      // case 'discovery':
       case 'settings':
         return <PlaceholderSection section={activeSection} />;
       default:

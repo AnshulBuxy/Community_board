@@ -19,11 +19,8 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSectionChange, userT
   ];
 
   const adminMenuItems = [
-    { id: 'dashboard', label: 'Admin Dashboard', icon: Home },
-    { id: 'users', label: 'User Management', icon: Users },
-    { id: 'content', label: 'Content Management', icon: BookOpen },
-    { id: 'analytics', label: 'Analytics', icon: Search },
-    { id: 'settings', label: 'System Settings', icon: Settings }
+    { id: 'admin-dashboard', label: 'Admin Dashboard', icon: Home },
+    { id: 'settings', label: 'Settings', icon: Settings }
   ];
 
   const menuItems = userType === 'admin' ? adminMenuItems : userMenuItems;

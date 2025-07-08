@@ -76,10 +76,11 @@ const Header: React.FC<HeaderProps> = ({ activeSection, onSectionChange, userTyp
 
   const getSectionTitle = () => {
     switch (activeSection) {
-      case 'dashboard': return 'Dashboard';
-      case 'ai-agents': return 'AI Agents';
-      case 'prompt-library': return 'Prompt Library';
-      case 'discovery': return 'Discovery';
+      case 'dashboard': return 'Dashboard'; // Keep for backward compatibility
+      case 'admin-dashboard': return 'Admin Dashboard';
+      // case 'ai-agents': return 'AI Agents';
+      // case 'prompt-library': return 'Prompt Library';
+      // case 'discovery': return 'Discovery';
       case 'community': return 'Community';
       case 'learning': return 'Learning Hub';
       case 'settings': return 'Settings';
