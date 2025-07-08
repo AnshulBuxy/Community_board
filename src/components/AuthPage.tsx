@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Eye, EyeOff, User, Shield, Mail, Lock, Phone, UserPlus, LogIn, ArrowLeft } from 'lucide-react';
+import { Eye, EyeOff, User, Shield, Mail, Lock, Phone, UserPlus, LogIn, ArrowLeft, Building } from 'lucide-react';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -11,8 +11,16 @@ const AuthPage: React.FC = () => {
     name: '',
     email: '',
     password: '',
-    phone: ''
+    phone: '',
+    organization: ''
   });
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({
@@ -38,7 +46,8 @@ const AuthPage: React.FC = () => {
       name: '',
       email: '',
       password: '',
-      phone: ''
+      phone: '',
+      organization: ''
     });
     setShowPassword(false);
   };
@@ -325,6 +334,35 @@ const AuthPage: React.FC = () => {
                     className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
                     required
                   />
+                </div>
+              </div>
+
+              {/* Organization */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Organization
+                </label>
+                <div className="relative">
+                  <Building className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                  <select
+                    name="organization"
+                    value={formData.organization}
+                    onChange={handleSelectChange}
+                    className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 appearance-none bg-white"
+                    required
+                  >
+                    <option value="">Select your organization</option>
+                    <option value="sama">Sama</option>
+                    <option value="navgurukul">Navgurukul</option>
+                    <option value="zuvy">Zuvy</option>
+                    <option value="samyarth">Samyarth</option>
+                    <option value="meraki">Meraki</option>
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                    <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                  </div>
                 </div>
               </div>
 
