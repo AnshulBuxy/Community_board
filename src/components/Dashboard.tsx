@@ -45,7 +45,7 @@ const Dashboard: React.FC = () => {
       case 'settings':
         return <PlaceholderSection section={activeSection} />;
       default:
-        return <DashboardSection />;
+        return <CommunitySection currentUser={currentUser} />;
     }
   };
 
