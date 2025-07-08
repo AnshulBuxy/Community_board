@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, User, Shield, Mail, Lock, Phone, UserPlus, LogIn, ArrowLeft } from 'lucide-react';
 
-interface AuthPageProps {
-  onLogin: (userType: 'admin' | 'user') => void;
-}
+import { useNavigate } from 'react-router-dom';
 
-const AuthPage: React.FC<AuthPageProps> = ({ onLogin }) => {
+const AuthPage: React.FC = () => {
+  const navigate = useNavigate();
   const [currentView, setCurrentView] = useState<'main' | 'login-user' | 'login-admin' | 'signup'>('main');
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -24,18 +23,14 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLogin }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // For now, bypass authentication and go to dashboard
-    if (currentView === 'login-admin') {
-      onLogin('admin');
-    } else {
-      onLogin('user');
-    }
+    // For now, bypass authentication and redirect to dashboard
+    navigate('/dashboard');
   };
 
   const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
-    // For now, bypass signup and go to dashboard as user
-    onLogin('user');
+    // For now, bypass signup and redirect to dashboard
+    navigate('/dashboard');
   };
 
   const resetForm = () => {
@@ -101,7 +96,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLogin }) => {
             {/* Bypass Button */}
             <div className="pt-4 border-t border-gray-200">
               <button
-                onClick={() => onLogin('user')}
+                onClick={() => navigate('/dashboard')}
                 className="w-full px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-xl transition-all duration-200 text-sm font-medium"
               >
                 Skip for now (Demo Mode)
@@ -223,7 +218,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLogin }) => {
               {/* Bypass Button */}
               <button
                 type="button"
-                onClick={() => onLogin(isAdmin ? 'admin' : 'user')}
+                onClick={() => navigate('/dashboard')}
                 className="w-full px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-xl transition-all duration-200 text-sm font-medium border border-gray-200"
               >
                 Skip Authentication (Demo)
@@ -394,7 +389,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLogin }) => {
               {/* Bypass Button */}
               <button
                 type="button"
-                onClick={() => onLogin('user')}
+                onClick={() => navigate('/dashboard')}
                 className="w-full px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-xl transition-all duration-200 text-sm font-medium border border-gray-200"
               >
                 Skip Registration (Demo)
