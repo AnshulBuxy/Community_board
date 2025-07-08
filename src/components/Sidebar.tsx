@@ -9,10 +9,10 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSectionChange, userType }) => {
   const userMenuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: Home },
-    { id: 'ai-agents', label: 'AI Agents', icon: Bot },
-    { id: 'prompt-library', label: 'Prompt Library', icon: BookOpen },
-    { id: 'discovery', label: 'Discovery', icon: Search },
+    // { id: 'dashboard', label: 'Dashboard', icon: Home },
+    // { id: 'ai-agents', label: 'AI Agents', icon: Bot },
+    // { id: 'prompt-library', label: 'Prompt Library', icon: BookOpen },
+    // { id: 'discovery', label: 'Discovery', icon: Search },
     { id: 'community', label: 'Community', icon: Users },
     { id: 'learning', label: 'Learning', icon: GraduationCap },
     { id: 'settings', label: 'Settings', icon: Settings }
