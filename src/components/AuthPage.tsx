@@ -232,7 +232,10 @@ const AuthPage: React.FC = () => {
               {/* Bypass Button */}
               <button
                 type="button"
-                onClick={() => navigate(isAdmin ? '/dashboard' : '/dashboard')}
+                onClick={() => {
+                  localStorage.setItem('loginType', isAdmin ? 'admin' : 'user');
+                  navigate('/dashboard');
+                }}
                 className="w-full px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-xl transition-all duration-200 text-sm font-medium border border-gray-200"
               >
                 Skip Authentication (Demo)
