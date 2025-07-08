@@ -433,9 +433,6 @@ const AuthPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => {
-                  localStorage.setItem('loginType', isAdmin ? 'admin' : 'user');
-                  navigate('/dashboard');
-                onClick={() => {
                   localStorage.setItem('loginType', 'user');
                   navigate('/dashboard');
                 }}
