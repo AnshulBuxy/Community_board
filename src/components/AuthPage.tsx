@@ -38,9 +38,8 @@ const AuthPage: React.FC = () => {
 
   const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
-    // Store login type for dashboard routing (signup defaults to user)
-    localStorage.setItem('loginType', 'user');
-    navigate('/dashboard');
+    // Navigate to approval waiting page after signup
+    navigate('/approval-waiting');
   };
 
   const resetForm = () => {
