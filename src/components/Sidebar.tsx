@@ -4,10 +4,11 @@ import { Home, Bot, BookOpen, Search, Users, Settings, GraduationCap } from 'luc
 interface SidebarProps {
   activeSection: string;
   onSectionChange: (section: string) => void;
+  userType: 'admin' | 'user';
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSectionChange }) => {
-  const menuItems = [
+const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSectionChange, userType }) => {
+  const userMenuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Home },
     { id: 'ai-agents', label: 'AI Agents', icon: Bot },
     { id: 'prompt-library', label: 'Prompt Library', icon: BookOpen },
@@ -17,17 +18,29 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSectionChange }) => 
     { id: 'settings', label: 'Settings', icon: Settings }
   ];
 
+  const adminMenuItems = [
+    { id: 'dashboard', label: 'Admin Dashboard', icon: Home },
+    { id: 'users', label: 'User Management', icon: Users },
+    { id: 'content', label: 'Content Management', icon: BookOpen },
+    { id: 'analytics', label: 'Analytics', icon: Search },
+    { id: 'settings', label: 'System Settings', icon: Settings }
+  ];
+
+  const menuItems = userType === 'admin' ? adminMenuItems : userMenuItems;
+
   return (
     <div className="w-64 bg-white border-r border-gray-200 h-screen flex flex-col">
       {/* Logo Section */}
       <div className="p-6 border-b border-gray-200">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center">
+          <div className={`w-10 h-10 ${userType === 'admin' ? 'bg-purple-600' : 'bg-black'} rounded-full flex items-center justify-center`}>
             <span className="text-white font-bold text-lg">S</span>
           </div>
           <div>
             <h1 className="text-xl font-bold text-gray-900">Sama</h1>
-            <p className="text-sm text-gray-600">Empower</p>
+            <p className="text-sm text-gray-600">
+              {userType === 'admin' ? 'Admin Panel' : 'Empower'}
+            </p>
           </div>
         </div>
       </div>

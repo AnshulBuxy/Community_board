@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import AuthPage from './components/AuthPage';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import CommunitySection from './components/CommunitySection';
@@ -9,6 +10,8 @@ import MyProfile from './components/MyProfile';
 import { User } from './types';
 
 const App: React.FC = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userType, setUserType] = useState<'admin' | 'user'>('user');
   const [activeSection, setActiveSection] = useState('dashboard');
 
   const currentUser: User = {
@@ -22,6 +25,22 @@ const App: React.FC = () => {
     rating: 4.0,
     availability: 'available'
   };
+
+  const handleLogin = (type: 'admin' | 'user') => {
+    setUserType(type);
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setUserType('user');
+    setActiveSection('dashboard');
+  };
+
+  // Show auth page if not authenticated
+  if (!isAuthenticated) {
+    return <AuthPage onLogin={handleLogin} />;
+  }
 
   const renderMainContent = () => {
     switch (activeSection) {
@@ -46,12 +65,21 @@ const App: React.FC = () => {
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
-      <Sidebar activeSection={activeSection} onSectionChange={setActiveSection} />
+      <Sidebar 
+        activeSection={activeSection} 
+        onSectionChange={setActiveSection}
+        userType={userType}
+      />
       
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <Header activeSection={activeSection} onSectionChange={setActiveSection} />
+        <Header 
+          activeSection={activeSection} 
+          onSectionChange={setActiveSection}
+          userType={userType}
+          onLogout={handleLogout}
+        />
         
         {/* Main Content */}
         <div className="flex-1 overflow-auto">

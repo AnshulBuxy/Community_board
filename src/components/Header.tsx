@@ -4,9 +4,11 @@ import { Search, Bell, Globe, User, ChevronDown, Eye, Bookmark, Award, Activity,
 interface HeaderProps {
   activeSection: string;
   onSectionChange: (section: string) => void;
+  userType: 'admin' | 'user';
+  onLogout: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ activeSection, onSectionChange }) => {
+const Header: React.FC<HeaderProps> = ({ activeSection, onSectionChange, userType, onLogout }) => {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('en');
@@ -37,7 +39,8 @@ const Header: React.FC<HeaderProps> = ({ activeSection, onSectionChange }) => {
     { id: 'saved', label: 'Saved', icon: Bookmark },
     { id: 'achievements', label: 'Achievements', icon: Award },
     { id: 'activity', label: 'Activity', icon: Activity },
-    { id: 'settings', label: 'Settings', icon: Settings }
+    { id: 'settings', label: 'Settings', icon: Settings },
+    { id: 'logout', label: 'Logout', icon: Settings }
   ];
 
   useEffect(() => {
@@ -55,6 +58,10 @@ const Header: React.FC<HeaderProps> = ({ activeSection, onSectionChange }) => {
   }, []);
 
   const handleProfileMenuClick = (section: string) => {
+    if (section === 'logout') {
+      onLogout();
+      return;
+    }
     onSectionChange('profile');
     setShowProfileDropdown(false);
     localStorage.setItem('profileSection', section);
@@ -87,7 +94,14 @@ const Header: React.FC<HeaderProps> = ({ activeSection, onSectionChange }) => {
       <div className="flex items-center justify-between">
         {/* Left Section - Title */}
         <div className="flex items-center gap-4">
-          <h1 className="text-2xl font-bold text-gray-900">{getSectionTitle()}</h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-bold text-gray-900">{getSectionTitle()}</h1>
+            {userType === 'admin' && (
+              <span className="px-3 py-1 bg-purple-100 text-purple-800 text-sm font-medium rounded-full">
+                Admin
+              </span>
+            )}
+          </div>
         </div>
 
         {/* Center Section - Search Bar */}
@@ -189,8 +203,15 @@ const Header: React.FC<HeaderProps> = ({ activeSection, onSectionChange }) => {
                       className="w-10 h-10 rounded-full object-cover"
                     />
                     <div>
-                      <p className="font-semibold text-gray-900">You</p>
-                      <p className="text-sm text-gray-500">@you</p>
+                      <div className="flex items-center gap-2">
+                        <p className="font-semibold text-gray-900">You</p>
+                        {userType === 'admin' && (
+                          <span className="px-2 py-0.5 bg-purple-100 text-purple-700 text-xs font-medium rounded-full">
+                            Admin
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-sm text-gray-500">@you • {userType}</p>
                     </div>
                   </div>
                 </div>
@@ -203,28 +224,36 @@ const Header: React.FC<HeaderProps> = ({ activeSection, onSectionChange }) => {
                       <button
                         key={item.id}
                         onClick={() => handleProfileMenuClick(item.id)}
-                        className="w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-gray-50 transition-colors duration-150 text-gray-700 hover:text-gray-900"
+                        className={`w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-gray-50 transition-colors duration-150 ${
+                          item.id === 'logout' 
+                            ? 'text-red-600 hover:text-red-700 hover:bg-red-50' 
+                            : 'text-gray-700 hover:text-gray-900'
+                        }`}
                       >
-                        <Icon className="h-4 w-4 text-gray-500" />
+                        <Icon className={`h-4 w-4 ${
+                          item.id === 'logout' ? 'text-red-500' : 'text-gray-500'
+                        }`} />
                         <span className="text-sm font-medium">{item.label}</span>
                       </button>
                     );
                   })}
                 </div>
 
-                {/* View Full Profile Button */}
-                <div className="border-t border-gray-100 pt-2 mt-2">
-                  <button
-                    onClick={() => {
-                      onSectionChange('profile');
-                      setShowProfileDropdown(false);
-                    }}
-                    className="w-full flex items-center justify-center gap-2 mx-2 px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
-                  >
-                    <User className="h-4 w-4" />
-                    <span className="text-sm font-medium">View Full Profile</span>
-                  </button>
-                </div>
+                {/* View Full Profile Button - Only show if not logout */}
+                {userType !== 'admin' && (
+                  <div className="border-t border-gray-100 pt-2 mt-2">
+                    <button
+                      onClick={() => {
+                        onSectionChange('profile');
+                        setShowProfileDropdown(false);
+                      }}
+                      className="w-full flex items-center justify-center gap-2 mx-2 px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
+                    >
+                      <User className="h-4 w-4" />
+                      <span className="text-sm font-medium">View Full Profile</span>
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </div>
