@@ -10,7 +10,7 @@ import { User } from '../types';
 
 const Dashboard: React.FC = () => {
   const [userType, setUserType] = useState<'admin' | 'user'>('user');
-  const [activeSection, setActiveSection] = useState('dashboard');
+  const [activeSection, setActiveSection] = useState('community');
 
   const currentUser: User = {
     id: 'current-user',
