@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { MessageCircle, Users, Star, MapPin, Clock, UserPlus, UserCheck, Eye } from 'lucide-react';
 import UniversalSearchFilters from './UniversalSearchFilters';
 import { useUniversalFilters } from '../hooks/useUniversalFilters';
+import UserProfileCard from './UserProfileCard';
 import { User } from '../types';
 
 interface Connection {
@@ -24,6 +25,7 @@ interface DiscoverUsersProps {
 }
 
 const DiscoverUsers: React.FC<DiscoverUsersProps> = ({ currentUser }) => {
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [users] = useState<UserWithConnections[]>([
     {
       id: '1',
@@ -166,6 +168,14 @@ const DiscoverUsers: React.FC<DiscoverUsersProps> = ({ currentUser }) => {
     }));
   };
 
+  const handleViewProfile = (userId: string) => {
+    setSelectedUserId(userId);
+  };
+
+  const handleBackToDiscover = () => {
+    setSelectedUserId(null);
+  };
+
   const formatJoinDate = (date: Date) => {
     return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
   };
@@ -246,6 +256,11 @@ const DiscoverUsers: React.FC<DiscoverUsersProps> = ({ currentUser }) => {
       </div>
     );
   };
+
+  // Show user profile card if a user is selected
+  if (selectedUserId) {
+    return <UserProfileCard userId={selectedUserId} onBack={handleBackToDiscover} />;
+  }
 
   return (
     <div className="space-y-6">
@@ -377,7 +392,9 @@ const DiscoverUsers: React.FC<DiscoverUsersProps> = ({ currentUser }) => {
               <div className="flex gap-2 mt-4">
                 <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors duration-200 flex-1">
                   <Eye className="h-4 w-4" />
-                  View Profile
+                  <span onClick={() => handleViewProfile(user.id)} className="cursor-pointer">
+                    View Profile
+                  </span>
                 </button>
                 {getConnectionButton(user)}
               </div>
