@@ -36,7 +36,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSectionChange, userT
           <div>
             <h1 className="text-xl font-bold text-gray-900">Sama</h1>
             <p className="text-sm text-gray-600">
-              {userType === 'admin' ? 'Admin Panel' : 'Empower'}
+              {userType === 'admin' ? 'Organization Admin' : 'Empower'}
             </p>
           </div>
         </div>

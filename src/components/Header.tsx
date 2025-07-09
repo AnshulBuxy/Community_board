@@ -97,11 +97,9 @@ const Header: React.FC<HeaderProps> = ({ activeSection, onSectionChange, userTyp
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-bold text-gray-900">{getSectionTitle()}</h1>
-            {userType === 'admin' && (
-              <span className="px-3 py-1 bg-purple-100 text-purple-800 text-sm font-medium rounded-full">
-                Admin
-              </span>
-            )}
+            <span className="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">
+              Sama
+            </span>
           </div>
         </div>
 
@@ -206,13 +204,11 @@ const Header: React.FC<HeaderProps> = ({ activeSection, onSectionChange, userTyp
                     <div>
                       <div className="flex items-center gap-2">
                         <p className="font-semibold text-gray-900">You</p>
-                        {userType === 'admin' && (
-                          <span className="px-2 py-0.5 bg-purple-100 text-purple-700 text-xs font-medium rounded-full">
-                            Admin
-                          </span>
-                        )}
+                        <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">
+                          Sama
+                        </span>
                       </div>
-                      <p className="text-sm text-gray-500">@you • {userType}</p>
+                      <p className="text-sm text-gray-500">@you • Sama Admin</p>
                     </div>
                   </div>
                 </div>
@@ -241,7 +237,7 @@ const Header: React.FC<HeaderProps> = ({ activeSection, onSectionChange, userTyp
                 </div>
 
                 {/* View Full Profile Button - Only show if not logout */}
-                {userType !== 'admin' && (
+                {userType === 'user' && (
                   <div className="border-t border-gray-100 pt-2 mt-2">
                     <button
                       onClick={() => {
