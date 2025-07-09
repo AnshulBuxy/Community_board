@@ -95,6 +95,8 @@ const AdminDashboard: React.FC = () => {
     }
   ]);
 
+  // State for multi-select functionality
+  const [selectedRequests, setSelectedRequests] = useState<string[]>([]);
   // Mock data for organization users
   const [organizationUsers, setOrganizationUsers] = useState<OrganizationUser[]>([
     {
@@ -183,6 +185,62 @@ const AdminDashboard: React.FC = () => {
     setPendingRequests(prev => prev.filter(user => user.id !== userId));
     // In real app, this would make an API call to reject the user
     console.log('Rejected user:', userId);
+  };
+
+  // Handle selecting/deselecting individual requests
+  const handleSelectRequest = (userId: string) => {
+    setSelectedRequests(prev => {
+      if (prev.includes(userId)) {
+        return prev.filter(id => id !== userId);
+      } else {
+        return [...prev, userId];
+      }
+    });
+  };
+
+  // Handle select all / deselect all
+  const handleSelectAllRequests = () => {
+    if (selectedRequests.length === pendingRequests.length) {
+      // If all are selected, deselect all
+      setSelectedRequests([]);
+    } else {
+      // Select all pending requests
+      setSelectedRequests(pendingRequests.map(user => user.id));
+    }
+  };
+
+  // Handle approving selected requests
+  const handleApproveSelectedRequests = () => {
+    const approvedUsers = pendingRequests.filter(user => selectedRequests.includes(user.id));
+    
+    // Add all approved users to organization users
+    const newOrganizationUsers: OrganizationUser[] = approvedUsers.map(user => ({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      avatar: 'https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&w=150',
+      role: 'student' as const,
+      skills: [],
+      rating: 0,
+      joinedDate: new Date(),
+      lastActive: new Date(),
+      status: 'active' as const,
+      completedSessions: 0,
+      posts: 0,
+      connections: 0
+    }));
+    
+    // Add to organization users list
+    setOrganizationUsers(prev => [...prev, ...newOrganizationUsers]);
+    
+    // Remove approved users from pending requests
+    setPendingRequests(prev => prev.filter(user => !selectedRequests.includes(user.id)));
+    
+    // Clear selection
+    setSelectedRequests([]);
+    
+    console.log('Approved users:', selectedRequests);
   };
 
   const formatTimeAgo = (date: Date) => {
@@ -312,13 +370,60 @@ const AdminDashboard: React.FC = () => {
         </div>
       ) : (
         <div className="space-y-4">
+          {/* Multi-select controls */}
+          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={selectedRequests.length === pendingRequests.length && pendingRequests.length > 0}
+                    onChange={handleSelectAllRequests}
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                  />
+                  <span className="text-sm font-medium text-gray-700">
+                    Select All ({pendingRequests.length})
+                  </span>
+                </label>
+                
+                {selectedRequests.length > 0 && (
+                  <span className="text-sm text-gray-600">
+                    {selectedRequests.length} selected
+                  </span>
+                )}
+              </div>
+              
+              <button
+                onClick={handleApproveSelectedRequests}
+                disabled={selectedRequests.length === 0}
+                className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg font-medium hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+              >
+                <CheckCircle className="h-4 w-4" />
+                Approve Selected ({selectedRequests.length})
+              </button>
+            </div>
+          </div>
+
           {pendingRequests.map((user) => (
             <div key={user.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">{user.name}</h3>
-                <span className="text-sm text-gray-500">
-                  Requested {formatTimeAgo(user.requestDate)}
-                </span>
+              <div className="flex items-start gap-4 mb-4">
+                <label className="flex items-center mt-1 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={selectedRequests.includes(user.id)}
+                    onChange={() => handleSelectRequest(user.id)}
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                  />
+                </label>
+                
+                <div className="flex-1">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold text-gray-900">{user.name}</h3>
+                    <span className="text-sm text-gray-500">
+                      Requested {formatTimeAgo(user.requestDate)}
+                    </span>
+                  </div>
+                </div>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
