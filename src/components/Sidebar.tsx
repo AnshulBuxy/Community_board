@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Bot, BookOpen, Search, Users, Settings, GraduationCap } from 'lucide-react';
+import { Home, Bot, BookOpen, Search, Users, Settings, GraduationCap, FileText } from 'lucide-react';
 
 interface SidebarProps {
   activeSection: string;
@@ -20,6 +20,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSectionChange, userT
 
   const adminMenuItems = [
     { id: 'admin-dashboard', label: 'Admin Dashboard', icon: Home },
+    { id: 'new-content', label: 'New Content', icon: FileText },
     { id: 'settings', label: 'Settings', icon: Settings }
   ];
 

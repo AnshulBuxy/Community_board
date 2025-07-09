@@ -5,6 +5,7 @@ import CommunitySection from './CommunitySection';
 import DashboardSection from './DashboardSection';
 import LearningSection from './LearningSection';
 import AdminDashboard from './AdminDashboard';
+import NewContentSection from './NewContentSection';
 import PlaceholderSection from './PlaceholderSection';
 import MyProfile from './MyProfile';
 import { User } from '../types';
@@ -46,6 +47,8 @@ const Dashboard: React.FC = () => {
         return <DashboardSection />;
       case 'admin-dashboard':
         return <AdminDashboard />;
+      case 'new-content':
+        return <NewContentSection />;
       case 'community':
         return <CommunitySection currentUser={currentUser} />;
       case 'learning':
