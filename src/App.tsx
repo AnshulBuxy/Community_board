@@ -4,7 +4,7 @@ import AuthPage from './components/AuthPage';
 import Dashboard from './components/Dashboard';
 import ApprovalWaitingPage from './components/ApprovalWaitingPage';
 import ProfileSetupPage from './components/ProfileSetupPage';
-import AdminDashboard from "./components/AdminDashboard;
+import AdminDashboard from './components/AdminDashboard';
 
 const App: React.FC = () => {
   return (
