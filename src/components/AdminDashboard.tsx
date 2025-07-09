@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import UserProfilePage from './UserProfilePage';
 import { 
   Users, 
   UserCheck, 
@@ -54,6 +55,7 @@ interface OrganizationUser {
 
 const AdminDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState('overview');
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
   const [roleFilter, setRoleFilter] = useState<'all' | 'student' | 'mentor'>('all');
@@ -185,6 +187,14 @@ const AdminDashboard: React.FC = () => {
     setPendingRequests(prev => prev.filter(user => user.id !== userId));
     // In real app, this would make an API call to reject the user
     console.log('Rejected user:', userId);
+  };
+
+  const handleViewUser = (userId: string) => {
+    setSelectedUserId(userId);
+  };
+
+  const handleBackToUserManagement = () => {
+    setSelectedUserId(null);
   };
 
   // Handle selecting/deselecting individual requests
@@ -566,7 +576,12 @@ const AdminDashboard: React.FC = () => {
                   <td className="py-4 px-6">
                     <button className="flex items-center gap-1 px-3 py-1 text-blue-600 hover:bg-blue-50 rounded-md transition-colors duration-200">
                       <Eye className="h-4 w-4" />
-                      <span className="text-sm">View</span>
+                      <span 
+                        className="text-sm cursor-pointer"
+                        onClick={() => handleViewUser(user.id)}
+                      >
+                        View
+                      </span>
                     </button>
                   </td>
                 </tr>
@@ -620,6 +635,11 @@ const AdminDashboard: React.FC = () => {
     { id: 'users', label: 'User Management', icon: Users },
     { id: 'analytics', label: 'Analytics', icon: BarChart3 }
   ];
+
+  // Show user profile page if a user is selected
+  if (selectedUserId) {
+    return <UserProfilePage userId={selectedUserId} onBack={handleBackToUserManagement} />;
+  }
 
   return (
     <div className="p-6 space-y-6">
