@@ -18,7 +18,9 @@ import {
   BarChart3,
   PieChart,
   LineChart,
-  Building
+  Building,
+  Award,
+  Eye
 } from 'lucide-react';
 
 interface PendingUser {
