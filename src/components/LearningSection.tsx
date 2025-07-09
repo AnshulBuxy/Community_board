@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
-import { BookOpen, Trophy, Gamepad2, Play, Clock, Users, Star, Award, Calendar, Timer, CheckCircle, PlayCircle, Eye, Filter, ChevronDown } from 'lucide-react';
+import { BookOpen, Trophy, Gamepad2, Play, Clock, Users, Star, Award, Calendar, Timer, CheckCircle, PlayCircle, Eye, Filter, ChevronDown, UserPlus } from 'lucide-react';
+import UserQuizDetailPage from './UserQuizDetailPage';
+import LiveQuizPage from './LiveQuizPage';
+import UserQuizLeaderboardPage from './UserQuizLeaderboardPage';
 
 const LearningSection: React.FC = () => {
   const [activeTab, setActiveTab] = useState('quizzes');
   const [quizFilter, setQuizFilter] = useState<'all' | 'live' | 'upcoming' | 'past'>('all');
+  const [selectedQuiz, setSelectedQuiz] = useState<any>(null);
+  const [showQuizDetail, setShowQuizDetail] = useState(false);
+  const [showLiveQuiz, setShowLiveQuiz] = useState(false);
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
   
   // Game filters
   const [gameDifficultyFilter, setGameDifficultyFilter] = useState<'all' | 'easy' | 'medium' | 'hard'>('all');
@@ -98,6 +105,22 @@ const LearningSection: React.FC = () => {
       registered: true,
       score: 92,
       rank: 8
+    },
+    {
+      id: '6',
+      title: 'Advanced React Patterns',
+      type: 'upcoming',
+      startTime: new Date(Date.now() + 432000000), // 5 days from now
+      endTime: new Date(Date.now() + 435600000), // 5 days + 1 hour
+      duration: '50 minutes',
+      participants: 67,
+      maxParticipants: 200,
+      difficulty: 'Hard',
+      questions: 30,
+      category: 'React',
+      description: 'Deep dive into advanced React patterns including render props, HOCs, and compound components.',
+      status: 'upcoming',
+      registered: false
     }
   ];
 
@@ -297,6 +320,58 @@ const LearningSection: React.FC = () => {
     return true;
   });
 
+  const handleQuizClick = (quiz: any) => {
+    setSelectedQuiz(quiz);
+    if (quiz.type === 'live' || quiz.type === 'past') {
+      setShowLeaderboard(true);
+    } else {
+      setShowQuizDetail(true);
+    }
+  };
+
+  const handleStartQuiz = () => {
+    setShowQuizDetail(false);
+    setShowLiveQuiz(true);
+  };
+
+  const handleBackToQuizzes = () => {
+    setSelectedQuiz(null);
+    setShowQuizDetail(false);
+    setShowLiveQuiz(false);
+    setShowLeaderboard(false);
+  };
+
+  // Show quiz detail page
+  if (showQuizDetail && selectedQuiz) {
+    return (
+      <UserQuizDetailPage 
+        quiz={selectedQuiz} 
+        onBack={handleBackToQuizzes}
+        onStartQuiz={handleStartQuiz}
+      />
+    );
+  }
+
+  // Show live quiz page
+  if (showLiveQuiz && selectedQuiz) {
+    return (
+      <LiveQuizPage 
+        quiz={selectedQuiz} 
+        onBack={handleBackToQuizzes}
+      />
+    );
+  }
+
+  // Show leaderboard page
+  if (showLeaderboard && selectedQuiz) {
+    return (
+      <UserQuizLeaderboardPage 
+        quiz={selectedQuiz} 
+        onBack={handleBackToQuizzes}
+      />
+    );
+  }
+
   // Filter Dropdown Component
   const FilterDropdown: React.FC<{
     label: string;
@@ -433,14 +508,19 @@ const LearningSection: React.FC = () => {
             {/* Action Button - Compact */}
             <div className="mt-3">
               {quiz.type === 'live' && (
-                <button className="w-full bg-red-500 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-red-600 transition-colors flex items-center justify-center gap-2">
+                <button 
+                  onClick={() => handleQuizClick(quiz)}
+                  className="w-full bg-red-500 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-red-600 transition-colors flex items-center justify-center gap-2">
                   <PlayCircle className="h-4 w-4" />
                   Join Quiz
                 </button>
               )}
               {quiz.type === 'upcoming' && !quiz.registered && (
-                <button className="w-full bg-blue-500 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-600 transition-colors">
-                  Register
+                <button 
+                  onClick={() => handleQuizClick(quiz)}
+                  className="w-full bg-blue-500 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-600 transition-colors">
+                  <UserPlus className="h-4 w-4 inline mr-1" />
+                  Register Quiz
                 </button>
               )}
               {quiz.type === 'upcoming' && quiz.registered && (
@@ -450,7 +530,9 @@ const LearningSection: React.FC = () => {
                 </button>
               )}
               {quiz.type === 'past' && (
-                <button className="w-full bg-gray-500 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-600 transition-colors flex items-center justify-center gap-2">
+                <button 
+                  onClick={() => handleQuizClick(quiz)}
+                  className="w-full bg-gray-500 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-600 transition-colors flex items-center justify-center gap-2">
                   <Eye className="h-4 w-4" />
                   View Results
                 </button>
