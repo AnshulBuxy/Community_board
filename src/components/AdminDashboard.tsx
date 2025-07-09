@@ -7,12 +7,9 @@ import {
   Search, 
   Filter, 
   ChevronDown, 
-  Eye, 
   Mail, 
   Phone, 
   Calendar,
-  MapPin,
-  Award,
   TrendingUp,
   Activity,
   CheckCircle,
@@ -20,7 +17,8 @@ import {
   AlertCircle,
   BarChart3,
   PieChart,
-  LineChart
+  LineChart,
+  Building
 } from 'lucide-react';
 
 interface PendingUser {
@@ -67,9 +65,9 @@ const AdminDashboard: React.FC = () => {
       phone: '+91 9876543210',
       organization: 'sama',
       requestDate: new Date(Date.now() - 86400000), // 1 day ago
-      skills: ['react', 'javascript', 'nodejs'],
-      bio: 'Full-stack developer with 2 years of experience. Passionate about learning new technologies.',
-      avatar: 'https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&w=150'
+      skills: [],
+      bio: '',
+      avatar: ''
     },
     {
       id: '2',
@@ -78,9 +76,9 @@ const AdminDashboard: React.FC = () => {
       phone: '+91 9876543211',
       organization: 'sama',
       requestDate: new Date(Date.now() - 172800000), // 2 days ago
-      skills: ['python', 'data-science', 'machine-learning'],
-      bio: 'Data science enthusiast currently pursuing Masters in Computer Science.',
-      avatar: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150'
+      skills: [],
+      bio: '',
+      avatar: ''
     },
     {
       id: '3',
@@ -89,14 +87,14 @@ const AdminDashboard: React.FC = () => {
       phone: '+91 9876543212',
       organization: 'sama',
       requestDate: new Date(Date.now() - 259200000), // 3 days ago
-      skills: ['javascript', 'react', 'typescript'],
-      bio: 'Frontend developer looking to enhance skills and connect with mentors.',
-      avatar: 'https://images.pexels.com/photos/1181424/pexels-photo-1181424.jpeg?auto=compress&cs=tinysrgb&w=150'
+      skills: [],
+      bio: '',
+      avatar: ''
     }
   ]);
 
   // Mock data for organization users
-  const [organizationUsers] = useState<OrganizationUser[]>([
+  const [organizationUsers, setOrganizationUsers] = useState<OrganizationUser[]>([
     {
       id: '1',
       name: 'Sarah Wilson',
@@ -148,8 +146,34 @@ const AdminDashboard: React.FC = () => {
   ]);
 
   const handleApproveRequest = (userId: string) => {
+    // Find the user being approved
+    const approvedUser = pendingRequests.find(user => user.id === userId);
+    
+    if (approvedUser) {
+      // Add to organization users
+      const newOrganizationUser: OrganizationUser = {
+        id: approvedUser.id,
+        name: approvedUser.name,
+        email: approvedUser.email,
+        phone: approvedUser.phone,
+        avatar: 'https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&w=150', // Default avatar
+        role: 'student', // Default role for new users
+        skills: [],
+        rating: 0,
+        joinedDate: new Date(),
+        lastActive: new Date(),
+        status: 'active',
+        completedSessions: 0,
+        posts: 0,
+        connections: 0
+      };
+      
+      // Add to organization users list (in a real app, this would be an API call)
+      setOrganizationUsers(prev => [...prev, newOrganizationUser]);
+    }
+    
+    // Remove from pending requests
     setPendingRequests(prev => prev.filter(user => user.id !== userId));
-    // In real app, this would make an API call to approve the user
     console.log('Approved user:', userId);
   };
 
@@ -287,79 +311,44 @@ const AdminDashboard: React.FC = () => {
       ) : (
         <div className="space-y-4">
           {pendingRequests.map((user) => (
-            <div key={user.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <div className="flex items-start gap-4">
-                <img
-                  src={user.avatar}
-                  alt={user.name}
-                  className="w-16 h-16 rounded-full object-cover"
-                />
-                
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-lg font-semibold text-gray-900">{user.name}</h3>
-                    <span className="text-sm text-gray-500">
-                      Requested {formatTimeAgo(user.requestDate)}
-                    </span>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-gray-600">
-                        <Mail className="h-4 w-4" />
-                        <span className="text-sm">{user.email}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-gray-600">
-                        <Phone className="h-4 w-4" />
-                        <span className="text-sm">{user.phone}</span>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-gray-600">
-                        <Calendar className="h-4 w-4" />
-                        <span className="text-sm">Organization: {user.organization}</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <p className="text-gray-700 mb-4">{user.bio}</p>
-                  
-                  <div className="mb-4">
-                    <h4 className="text-sm font-medium text-gray-700 mb-2">Skills:</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {user.skills.map((skill) => (
-                        <span
-                          key={skill}
-                          className="px-2 py-1 bg-blue-100 text-blue-800 text-sm rounded-md font-medium"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  <div className="flex gap-3">
-                    <button
-                      onClick={() => handleApproveRequest(user.id)}
-                      className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg font-medium hover:bg-green-600 transition-colors duration-200"
-                    >
-                      <CheckCircle className="h-4 w-4" />
-                      Approve
-                    </button>
-                    <button
-                      onClick={() => handleRejectRequest(user.id)}
-                      className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600 transition-colors duration-200"
-                    >
-                      <XCircle className="h-4 w-4" />
-                      Reject
-                    </button>
-                    <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors duration-200">
-                      <Eye className="h-4 w-4" />
-                      View Details
-                    </button>
-                  </div>
+            <div key={user.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-900">{user.name}</h3>
+                <span className="text-sm text-gray-500">
+                  Requested {formatTimeAgo(user.requestDate)}
+                </span>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Mail className="h-4 w-4" />
+                  <span className="text-sm">{user.email}</span>
                 </div>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Phone className="h-4 w-4" />
+                  <span className="text-sm">{user.phone}</span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Building className="h-4 w-4" />
+                  <span className="text-sm">Organization: {user.organization}</span>
+                </div>
+              </div>
+              
+              <div className="flex gap-3">
+                <button
+                  onClick={() => handleApproveRequest(user.id)}
+                  className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg font-medium hover:bg-green-600 transition-colors duration-200"
+                >
+                  <CheckCircle className="h-4 w-4" />
+                  Approve
+                </button>
+                <button
+                  onClick={() => handleRejectRequest(user.id)}
+                  className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600 transition-colors duration-200"
+                >
+                  <XCircle className="h-4 w-4" />
+                  Reject
+                </button>
               </div>
             </div>
           ))}
