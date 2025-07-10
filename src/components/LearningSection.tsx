@@ -546,11 +546,13 @@ const LearningSection: React.FC = () => {
                   onClick={() => handleQuizClick(quiz)}
                   className="w-full bg-blue-500 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-600 transition-colors">
                   <UserPlus className="h-4 w-4 inline mr-1" />
-                  Register Quiz
+                  Register
                 </button>
               )}
               {quiz.type === 'upcoming' && quiz.registered && (
-                <button className="w-full bg-green-500 text-white px-3 py-2 rounded-md text-sm font-medium cursor-default flex items-center justify-center gap-2">
+                <button 
+                  onClick={() => handleQuizClick(quiz)}
+                  className="w-full bg-green-500 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-green-600 transition-colors flex items-center justify-center gap-2">
                   <CheckCircle className="h-4 w-4" />
                   Registered
                 </button>
