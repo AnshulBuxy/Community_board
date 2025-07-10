@@ -3,6 +3,8 @@ import { BookOpen, Trophy, Gamepad2, Play, Clock, Users, Star, Award, Calendar, 
 import UserQuizDetailPage from './UserQuizDetailPage';
 import LiveQuizPage from './LiveQuizPage';
 import UserQuizLeaderboardPage from './UserQuizLeaderboardPage';
+import LiveQuizJoinPage from './LiveQuizJoinPage';
+import QuizTakingPage from './QuizTakingPage';
 
 const LearningSection: React.FC = () => {
   const [activeTab, setActiveTab] = useState('quizzes');
@@ -11,6 +13,8 @@ const LearningSection: React.FC = () => {
   const [showQuizDetail, setShowQuizDetail] = useState(false);
   const [showLiveQuiz, setShowLiveQuiz] = useState(false);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
+  const [showLiveJoinPage, setShowLiveJoinPage] = useState(false);
+  const [showQuizTaking, setShowQuizTaking] = useState(false);
   
   // Game filters
   const [gameDifficultyFilter, setGameDifficultyFilter] = useState<'all' | 'easy' | 'medium' | 'hard'>('all');
@@ -322,9 +326,14 @@ const LearningSection: React.FC = () => {
 
   const handleQuizClick = (quiz: any) => {
     setSelectedQuiz(quiz);
-    if (quiz.type === 'live' || quiz.type === 'past') {
+    if (quiz.type === 'live') {
+      setSelectedQuiz(quiz);
+      setShowLiveJoinPage(true);
+    } else if (quiz.type === 'past') {
+      setSelectedQuiz(quiz);
       setShowLeaderboard(true);
     } else {
+      setSelectedQuiz(quiz);
       setShowQuizDetail(true);
     }
   };
@@ -334,11 +343,18 @@ const LearningSection: React.FC = () => {
     setShowLiveQuiz(true);
   };
 
+  const handleStartQuizTaking = () => {
+    setShowLiveJoinPage(false);
+    setShowQuizTaking(true);
+  };
+
   const handleBackToQuizzes = () => {
     setSelectedQuiz(null);
     setShowQuizDetail(false);
     setShowLiveQuiz(false);
     setShowLeaderboard(false);
+    setShowLiveJoinPage(false);
+    setShowQuizTaking(false);
   };
 
   // Show quiz detail page
@@ -370,6 +386,16 @@ const LearningSection: React.FC = () => {
         onBack={handleBackToQuizzes}
       />
     );
+  }
+
+  // Show live quiz join page
+  if (selectedQuiz && showLiveJoinPage) {
+    return <LiveQuizJoinPage quiz={selectedQuiz} onBack={handleBackToQuizzes} onJoinQuiz={handleStartQuizTaking} />;
+  }
+
+  // Show quiz taking page
+  if (selectedQuiz && showQuizTaking) {
+    return <QuizTakingPage quiz={selectedQuiz} onBack={handleBackToQuizzes} />;
   }
 
   // Filter Dropdown Component
