@@ -64,8 +64,8 @@ const LiveQuizJoinPage: React.FC<LiveQuizJoinPageProps> = ({ quiz, onBack, onJoi
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl p-6 max-w-md w-full mx-4">
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-            <Play className="h-6 w-6 text-red-600" />
+          <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center">
+            <Play className="h-6 w-6 text-indigo-600" />
           </div>
           <div>
             <h3 className="text-lg font-semibold text-gray-900">Join Live Quiz</h3>
@@ -78,11 +78,11 @@ const LiveQuizJoinPage: React.FC<LiveQuizJoinPageProps> = ({ quiz, onBack, onJoi
           <div className="space-y-2 text-sm text-gray-600">
             <div className="flex items-center gap-2">
               <Timer className="h-4 w-4" />
-              <span>{formatTimeRemaining(quiz.endTime)}</span>
+              <span>Window closes in 23h 45m</span>
             </div>
             <div className="flex items-center gap-2">
               <Clock className="h-4 w-4" />
-              <span>{quiz.duration}</span>
+              <span>Quiz Duration: 1 hour</span>
             </div>
             <div className="flex items-center gap-2">
               <FileText className="h-4 w-4" />
@@ -90,8 +90,8 @@ const LiveQuizJoinPage: React.FC<LiveQuizJoinPageProps> = ({ quiz, onBack, onJoi
             </div>
           </div>
           
-          <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-            <div className="flex items-center gap-2 text-red-800">
+          <div className="mt-4 p-3 bg-indigo-50 border border-indigo-200 rounded-lg">
+            <div className="flex items-center gap-2 text-indigo-800">
               <AlertCircle className="h-4 w-4" />
               <span className="font-medium text-sm">Quiz is live! Join now to participate.</span>
             </div>
@@ -107,7 +107,7 @@ const LiveQuizJoinPage: React.FC<LiveQuizJoinPageProps> = ({ quiz, onBack, onJoi
           </button>
           <button
             onClick={handleJoin}
-            className="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200"
+            className="flex-1 px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors duration-200"
           >
             Join Quiz
           </button>
@@ -172,7 +172,7 @@ const LiveQuizJoinPage: React.FC<LiveQuizJoinPageProps> = ({ quiz, onBack, onJoi
       </div>
 
       {/* Quiz Header */}
-      <div className="bg-gradient-to-r from-red-500 to-pink-600 rounded-xl p-6 text-white relative overflow-hidden">
+      <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl p-6 text-white relative overflow-hidden">
         <div className="absolute top-0 right-0 w-32 h-32 bg-white bg-opacity-10 rounded-full -mr-16 -mt-16"></div>
         <div className="absolute bottom-0 left-0 w-24 h-24 bg-white bg-opacity-10 rounded-full -ml-12 -mb-12"></div>
         
@@ -190,9 +190,17 @@ const LiveQuizJoinPage: React.FC<LiveQuizJoinPageProps> = ({ quiz, onBack, onJoi
             <div className="bg-white bg-opacity-20 rounded-lg p-3">
               <div className="flex items-center gap-2 mb-1">
                 <Timer className="h-4 w-4" />
-                <span className="text-sm">Time Left</span>
+                <span className="text-sm">Time Window Remaining</span>
               </div>
-              <div className="text-xl font-bold">{formatTimeRemaining(quiz.endTime)}</div>
+              <div className="text-xl font-bold">23h 45m</div>
+            </div>
+            
+            <div className="bg-white bg-opacity-20 rounded-lg p-3">
+              <div className="flex items-center gap-2 mb-1">
+                <Clock className="h-4 w-4" />
+                <span className="text-sm">Quiz Duration</span>
+              </div>
+              <div className="text-xl font-bold">1 hour</div>
             </div>
             
             <div className="bg-white bg-opacity-20 rounded-lg p-3">
@@ -257,16 +265,16 @@ const LiveQuizJoinPage: React.FC<LiveQuizJoinPageProps> = ({ quiz, onBack, onJoi
                   <div>
                     <div className="flex items-center gap-2">
                       <Timer className="h-4 w-4 text-red-600" />
-                      <span className="text-sm text-red-700">Time Remaining</span>
+                      <span className="text-sm text-red-700">Window Remaining</span>
                     </div>
-                    <div className="text-2xl font-bold text-red-800">{formatTimeRemaining(quiz.endTime)}</div>
+                    <div className="text-2xl font-bold text-red-800">23h 45m</div>
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <Users className="h-4 w-4 text-red-600" />
-                      <span className="text-sm text-red-700">Active Participants</span>
+                      <Clock className="h-4 w-4 text-red-600" />
+                      <span className="text-sm text-red-700">Quiz Duration</span>
                     </div>
-                    <div className="text-2xl font-bold text-red-800">{quiz.participants}</div>
+                    <div className="text-2xl font-bold text-red-800">1 hour</div>
                   </div>
                 </div>
               </div>
@@ -304,26 +312,26 @@ const LiveQuizJoinPage: React.FC<LiveQuizJoinPageProps> = ({ quiz, onBack, onJoi
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Join Live Quiz</h3>
             
             <div className="space-y-4">
-              <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                <div className="flex items-center gap-2 text-red-800">
-                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+              <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-3">
+                <div className="flex items-center gap-2 text-indigo-800">
+                  <div className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse"></div>
                   <span className="font-medium text-sm">Quiz is live now!</span>
                 </div>
-                <div className="text-xs text-red-600 mt-1">
-                  {formatTimeRemaining(quiz.endTime)}
+                <div className="text-xs text-indigo-600 mt-1">
+                  Window closes in 23h 45m
                 </div>
               </div>
               
               <div className="text-center">
-                <div className="text-2xl font-bold text-red-600 mb-1">
-                  {quiz.maxParticipants - quiz.participants}
+                <div className="text-2xl font-bold text-indigo-600 mb-1">
+                  Unlimited
                 </div>
-                <div className="text-sm text-gray-600">spots remaining</div>
+                <div className="text-sm text-gray-600">participants allowed</div>
               </div>
               
               <button
                 onClick={() => setShowJoinModal(true)}
-                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600 transition-colors duration-200"
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-indigo-500 text-white rounded-lg font-medium hover:bg-indigo-600 transition-colors duration-200"
               >
                 <Play className="h-5 w-5" />
                 Join Quiz Now
@@ -351,8 +359,8 @@ const LiveQuizJoinPage: React.FC<LiveQuizJoinPageProps> = ({ quiz, onBack, onJoi
                 <span className="font-medium">{quiz.participants}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-gray-600">Max Participants:</span>
-                <span className="font-medium">{quiz.maxParticipants}</span>
+                <span className="text-gray-600">Time Window:</span>
+                <span className="font-medium">1 day</span>
               </div>
             </div>
           </div>
