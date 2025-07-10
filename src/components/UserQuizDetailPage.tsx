@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import LiveQuizJoinPage from './LiveQuizJoinPage';
+import QuizTakingPage from './QuizTakingPage';
 import { 
   ArrowLeft, 
   Clock, 
@@ -25,6 +27,8 @@ interface UserQuizDetailPageProps {
 const UserQuizDetailPage: React.FC<UserQuizDetailPageProps> = ({ quiz, onBack, onStartQuiz }) => {
   const [isRegistered, setIsRegistered] = useState(quiz.registered || false);
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
+  const [showLiveJoinPage, setShowLiveJoinPage] = useState(false);
+  const [showQuizTaking, setShowQuizTaking] = useState(false);
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty.toLowerCase()) {
@@ -72,6 +76,38 @@ const UserQuizDetailPage: React.FC<UserQuizDetailPageProps> = ({ quiz, onBack, o
     setShowRegistrationModal(false);
     // In real app, make API call to register
   };
+
+  const handleJoinLiveQuiz = () => {
+    if (quiz.type === 'live') {
+      setShowLiveJoinPage(true);
+    } else {
+      onStartQuiz();
+    }
+  };
+
+  const handleStartQuizTaking = () => {
+    setShowLiveJoinPage(false);
+    setShowQuizTaking(true);
+  };
+
+  const handleBackFromLiveJoin = () => {
+    setShowLiveJoinPage(false);
+  };
+
+  const handleBackFromQuizTaking = () => {
+    setShowQuizTaking(false);
+    setShowLiveJoinPage(false);
+  };
+
+  // Show live quiz join page
+  if (showLiveJoinPage) {
+    return <LiveQuizJoinPage quiz={quiz} onBack={handleBackFromLiveJoin} onJoinQuiz={handleStartQuizTaking} />;
+  }
+
+  // Show quiz taking page
+  if (showQuizTaking) {
+    return <QuizTakingPage quiz={quiz} onBack={handleBackFromQuizTaking} />;
+  }
 
   const RegistrationModal = () => (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -339,11 +375,11 @@ const UserQuizDetailPage: React.FC<UserQuizDetailPageProps> = ({ quiz, onBack, o
                   </div>
                 </div>
                 <button
-                  onClick={onStartQuiz}
+                  onClick={handleJoinLiveQuiz}
                   className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600 transition-colors duration-200"
                 >
                   <Play className="h-5 w-5" />
-                  Start Quiz
+                  Join Quiz
                 </button>
               </div>
             )}
