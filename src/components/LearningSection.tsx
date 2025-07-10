@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { BookOpen, Clock, Trophy, Users, Play, Calendar } from 'lucide-react';
 import LiveQuizJoinPage from './LiveQuizJoinPage';
 import QuizTakingPage from './QuizTakingPage';
-import QuizDetailsPage from './QuizDetailsPage';
+import UserQuizDetailPage from './UserQuizDetailPage';
 import QuizLeaderboardPage from './QuizLeaderboardPage';
 
 interface Quiz {
@@ -18,7 +18,7 @@ interface Quiz {
 const LearningSection: React.FC = () => {
   const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
   const [showLiveJoinPage, setShowLiveJoinPage] = useState(false);
-  const [showQuizDetail, setShowQuizDetail] = useState(false);
+  const [showUserQuizDetail, setShowUserQuizDetail] = useState(false);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [showQuizTaking, setShowQuizTaking] = useState(false);
 
@@ -69,13 +69,13 @@ const LearningSection: React.FC = () => {
     } else {
       // For upcoming quizzes (both registered and unregistered), show detail page
       setSelectedQuiz(quiz);
-      setShowQuizDetail(true);
+      setShowUserQuizDetail(true);
     }
   };
 
   const handleBackToLearning = () => {
     setShowLiveJoinPage(false);
-    setShowQuizDetail(false);
+    setShowUserQuizDetail(false);
     setShowLeaderboard(false);
     setShowQuizTaking(false);
     setSelectedQuiz(null);
@@ -83,7 +83,7 @@ const LearningSection: React.FC = () => {
 
   const handleStartQuiz = () => {
     setShowLiveJoinPage(false);
-    setShowQuizDetail(false);
+    setShowUserQuizDetail(false);
     setShowQuizTaking(true);
   };
 
@@ -133,12 +133,11 @@ const LearningSection: React.FC = () => {
     );
   }
 
-  if (showQuizDetail && selectedQuiz) {
+  if (showUserQuizDetail && selectedQuiz) {
     return (
-      <QuizDetailsPage
+      <UserQuizDetailPage
         quiz={selectedQuiz}
         onBack={handleBackToLearning}
-        onStartQuiz={handleStartQuiz}
       />
     );
   }
