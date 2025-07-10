@@ -325,17 +325,18 @@ const LearningSection: React.FC = () => {
   });
 
   const handleQuizClick = (quiz: any) => {
-    setSelectedQuiz(quiz);
+    if (quiz.type === 'live' || quiz.type === 'completed') {
     if (quiz.type === 'live') {
       setSelectedQuiz(quiz);
       setShowLiveJoinPage(true);
     } else if (quiz.type === 'past') {
       setSelectedQuiz(quiz);
       setShowLeaderboard(true);
+    } else if (quiz.type === 'past') {
+      setSelectedQuiz(quiz);
+      setShowLeaderboard(true);
     } else {
       // For upcoming quizzes (both registered and unregistered), show detail page
-      setSelectedQuiz(quiz);
-      setShowQuizDetail(true);
       setShowQuizDetail(true);
     }
   };
@@ -553,6 +554,7 @@ const LearningSection: React.FC = () => {
               )}
               {quiz.type === 'upcoming' && quiz.registered && (
                 <button className="w-full bg-green-500 text-white px-3 py-2 rounded-md text-sm font-medium cursor-default flex items-center justify-center gap-2">
+                  onClick={() => handleQuizClick(quiz)}
                   <CheckCircle className="h-4 w-4" />
                   Registered
                 </button>
