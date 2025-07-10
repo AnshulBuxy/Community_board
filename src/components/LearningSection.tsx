@@ -333,7 +333,9 @@ const LearningSection: React.FC = () => {
       setSelectedQuiz(quiz);
       setShowLeaderboard(true);
     } else {
+      // For upcoming quizzes (both registered and unregistered), show detail page
       setSelectedQuiz(quiz);
+      setShowQuizDetail(true);
       setShowQuizDetail(true);
     }
   };
