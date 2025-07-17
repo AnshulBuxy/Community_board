@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, User, Shield, Mail, Lock, Phone, UserPlus, LogIn, ArrowLeft, Building } from 'lucide-react';
-
 import { useNavigate } from 'react-router-dom';
+import { authAPI } from '../services/api';
 
 const AuthPage: React.FC = () => {
   const navigate = useNavigate();
   const [currentView, setCurrentView] = useState<'main' | 'login-user' | 'login-admin' | 'signup'>('main');
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -29,17 +31,46 @@ const AuthPage: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Store login type for dashboard routing
-    localStorage.setItem('loginType', isAdmin ? 'admin' : 'user');
-    navigate('/dashboard');
+    setLoading(true);
+    setError('');
+
+    try {
+      const isAdmin = currentView === 'login-admin';
+      await authAPI.login(formData.email, formData.password);
+      
+      // Store login type for dashboard routing
+      localStorage.setItem('loginType', isAdmin ? 'admin' : 'user');
+      navigate('/dashboard');
+    } catch (err) {
+      setError('Invalid credentials. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleSignup = (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Navigate to approval waiting page after signup
-    navigate('/approval-waiting');
+    setLoading(true);
+    setError('');
+
+    try {
+      await authAPI.register({
+        name: formData.name,
+        username: formData.email.split('@')[0], // Use email prefix as username
+        email: formData.email,
+        password: formData.password,
+        role: 'student'
+      });
+      
+      // Navigate to approval waiting page after signup
+      navigate('/approval-waiting');
+    } catch (err) {
+      setError('Registration failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const resetForm = () => {
@@ -51,6 +82,7 @@ const AuthPage: React.FC = () => {
       organization: ''
     });
     setShowPassword(false);
+    setError('');
   };
 
   const goBack = () => {
@@ -162,6 +194,12 @@ const AuthPage: React.FC = () => {
           {/* Login Form */}
           <div className="bg-white rounded-2xl shadow-xl p-8">
             <form onSubmit={handleSubmit} className="space-y-6">
+              {error && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                  <p className="text-red-800 text-sm">{error}</p>
+                </div>
+              )}
+
               {/* Email */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -220,12 +258,13 @@ const AuthPage: React.FC = () => {
               {/* Submit Button */}
               <button
                 type="submit"
+                disabled={loading}
                 className={`w-full flex items-center justify-center gap-3 px-6 py-3 ${
                   isAdmin ? 'bg-purple-500 hover:bg-purple-600' : 'bg-blue-500 hover:bg-blue-600'
-                } text-white rounded-xl font-medium transition-all duration-200 transform hover:scale-105`}
+                } text-white rounded-xl font-medium transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed`}
               >
                 <LogIn className="h-5 w-5" />
-                Sign In
+                {loading ? 'Signing In...' : 'Sign In'}
               </button>
 
               {/* Bypass Button */}
@@ -287,6 +326,12 @@ const AuthPage: React.FC = () => {
           {/* Signup Form */}
           <div className="bg-white rounded-2xl shadow-xl p-8">
             <form onSubmit={handleSignup} className="space-y-6">
+              {error && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                  <p className="text-red-800 text-sm">{error}</p>
+                </div>
+              )}
+
               {/* Name */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -425,10 +470,11 @@ const AuthPage: React.FC = () => {
               {/* Submit Button */}
               <button
                 type="submit"
+                disabled={loading}
                 className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-green-500 text-white rounded-xl font-medium hover:bg-green-600 transition-all duration-200 transform hover:scale-105"
               >
                 <UserPlus className="h-5 w-5" />
-                Create Account
+                {loading ? 'Creating Account...' : 'Create Account'}
               </button>
 
               {/* Skip Button - Smaller */}

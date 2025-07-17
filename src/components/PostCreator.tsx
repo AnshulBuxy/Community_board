@@ -2,14 +2,18 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Image, FileText, Send, AtSign } from 'lucide-react';
 import { User } from '../types';
 import { useMentions } from '../hooks/useMentions';
+import { postsAPI } from '../services/api';
 
 interface PostCreatorProps {
   currentUser: User;
-  onCreatePost: (content: string) => void;
+  onCreatePost?: (content: string) => void;
+  onPostCreated?: () => void;
 }
 
-const PostCreator: React.FC<PostCreatorProps> = ({ currentUser, onCreatePost }) => {
+const PostCreator: React.FC<PostCreatorProps> = ({ currentUser, onCreatePost, onPostCreated }) => {
   const [content, setContent] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [cursorPosition, setCursorPosition] = useState(0);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { users, showMentions, mentionPosition, handleMentionSearch, hideMentions } = useMentions();
@@ -58,11 +62,30 @@ const PostCreator: React.FC<PostCreatorProps> = ({ currentUser, onCreatePost }) 
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (content.trim()) {
-      onCreatePost(content);
-      setContent('');
-      hideMentions();
+      setLoading(true);
+      setError('');
+      
+      try {
+        await postsAPI.createPost(content);
+        setContent('');
+        hideMentions();
+        
+        // Call the callback to refresh posts
+        if (onPostCreated) {
+          onPostCreated();
+        }
+        
+        // Legacy callback support
+        if (onCreatePost) {
+          onCreatePost(content);
+        }
+      } catch (err) {
+        setError('Failed to create post. Please try again.');
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -75,6 +98,12 @@ const PostCreator: React.FC<PostCreatorProps> = ({ currentUser, onCreatePost }) 
 
   return (
     <div className="bg-white rounded-lg shadow-sm p-6 mb-6 relative">
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
+          <p className="text-red-800 text-sm">{error}</p>
+        </div>
+      )}
+      
       <div className="flex items-start gap-4">
         <img
           src={currentUser.avatar}
@@ -143,10 +172,11 @@ const PostCreator: React.FC<PostCreatorProps> = ({ currentUser, onCreatePost }) 
             <button
               onClick={handleSubmit}
               disabled={!content.trim()}
+              disabled={!content.trim() || loading}
               className="flex items-center gap-2 px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
             >
               <Send className="h-4 w-4" />
-              Post
+              {loading ? 'Posting...' : 'Post'}
             </button>
           </div>
         </div>
