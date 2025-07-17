@@ -22,7 +22,10 @@ const CommunitySection: React.FC<CommunitySectionProps> = ({ currentUser }) => {
   const postCreatorRef = useRef<HTMLDivElement>(null);
   
   const {
-    posts,
+    posts: allPosts,
+    refetch,
+    loading,
+    error,
     savedPosts,
     sortBy,
     setSortBy,
@@ -42,7 +45,7 @@ const CommunitySection: React.FC<CommunitySectionProps> = ({ currentUser }) => {
 
   const handleCreatePost = (content: string) => {
     // Refresh posts after creating a new post
-    posts.refetch();
+    refetch();
   };
 
   const scrollToPostCreator = () => {
@@ -93,7 +96,7 @@ const CommunitySection: React.FC<CommunitySectionProps> = ({ currentUser }) => {
               <PostCreator 
                 currentUser={currentUser} 
                 onCreatePost={handleCreatePost}
-                onPostCreated={() => posts.refetch()}
+                onPostCreated={() => refetch()}
               />
             </div>
             
@@ -105,17 +108,17 @@ const CommunitySection: React.FC<CommunitySectionProps> = ({ currentUser }) => {
                 {getFilterSummary()}
               </h2>
               
-              {posts.loading && (
+              {loading && (
                 <div className="text-center py-8">
                   <p className="text-gray-500">Loading posts...</p>
                 </div>
               )}
               
-              {posts.error && (
+              {error && (
                 <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
-                  <p className="text-red-800">{posts.error}</p>
+                  <p className="text-red-800">{error}</p>
                   <button 
-                    onClick={posts.refetch}
+                    onClick={refetch}
                     className="mt-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200"
                   >
                     Retry
@@ -124,18 +127,18 @@ const CommunitySection: React.FC<CommunitySectionProps> = ({ currentUser }) => {
               )}
               
               <div className="space-y-4">
-                {!posts.loading && posts.posts.length === 0 ? (
+                {!loading && allPosts.length === 0 ? (
                   <div className="text-center py-12">
                     <p className="text-gray-500">No posts found matching your criteria</p>
                     <p className="text-gray-400 text-sm mt-2">Try adjusting your filters or search terms</p>
                   </div>
                 ) : (
-                  posts.posts.map(post => (
+                  allPosts.map(post => (
                     <PostCard
                       key={post.id}
                       post={post}
-                      onToggleLike={posts.toggleLike}
-                      onToggleSave={posts.toggleSave}
+                      onToggleLike={toggleLike}
+                      onToggleSave={toggleSave}
                     />
                   ))
                 )}
